@@ -38,8 +38,18 @@ end
 seq = "CCTAGGAGGG"
 ref = "ACCTGGTATGATAGCG"
 
-scoremodel = AffineGapScoreModel(BLOSUM80,gap_open = -5, gap_extend = -1)
-aln = pairalign(GlobalAlignment(),check_dna(seq),check_dna(ref), scoremodel)
+scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -5, gap_extend = -1)
+res = pairalign(GlobalAlignment(),check_dna(seq),check_dna(ref), scoremodel)
 
-s = score(aln)
+s = score(res)
+aln = alignment(res)
 
+#read seq in alignment
+for i in 1:length(seq)
+    println("seq2ref ",seq2ref(aln,i)," seq2aln ", seq2aln(aln,i))
+end
+
+#read ref in alignment
+for i in 1:length(seq)
+    println("ref2seq ",ref2seq(aln,i)," ref2aln ", ref2aln(aln,i))
+end
