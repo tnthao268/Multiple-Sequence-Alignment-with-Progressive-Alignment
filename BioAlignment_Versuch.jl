@@ -35,3 +35,11 @@ function check_dna(dna::String)
     return dna
 end
 
+seq = "CCTAGGAGGG"
+ref = "ACCTGGTATGATAGCG"
+
+scoremodel = AffineGapScoreModel(BLOSUM80,gap_open = -5, gap_extend = -1)
+aln = pairalign(GlobalAlignment(),check_dna(seq),check_dna(ref), scoremodel)
+
+s = score(aln)
+
