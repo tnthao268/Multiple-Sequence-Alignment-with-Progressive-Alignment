@@ -53,3 +53,10 @@ end
 for i in 1:length(seq)
     println("ref2seq ",ref2seq(aln,i)," ref2aln ", ref2aln(aln,i))
 end
+
+collect(aln)
+# -> aln is an array of tuples, which describe all positions in the alignment
+
+#read Alignments: aligned seq und ref (saved in array)
+aln_seq = [x for (x,_) in aln]
+aln_ref = [y for (_,y) in aln]
