@@ -33,3 +33,10 @@ function readDNAAlignment(seq1::String, seq2::String)
 
     ReadAlignment(score(res),aln_seq1,aln_seq2)
 end
+
+#Using example
+aln1 = readDNAAlignment(seq,ref)
+@assert aln_seq == aln1.aln_seq1
+@assert aln_ref == aln1.aln_seq2
+aln1.aln_seq1
+aln1.score
