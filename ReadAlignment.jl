@@ -1,12 +1,11 @@
-using BioAlignments
-include("BioAlignment_Versuch.jl")
-
+#ReadAlignment
 struct ReadAlignment
     score::Int64
     aln_seq1::Vector{Char}
     aln_seq2::Vector{Char}
 end
 
+#---------------------------
 # check if sequence is DNA
 function check_DNA(seq::String)
     nu = "ATGC"
@@ -16,6 +15,7 @@ function check_DNA(seq::String)
     return true
 end
 
+#--------------------------------------------------------
 #=  aligns two sequences and save the aligned sequences
     returns a ReadAlignment(score,aln_seq1,aln_seq2)
 =#
@@ -34,7 +34,10 @@ function readDNAAlignment(seq1::String, seq2::String)
     ReadAlignment(score(res),aln_seq1,aln_seq2)
 end
 
+#--------------
 #Using example
+include("BioAlignment_Versuch.jl")
+
 aln1 = readDNAAlignment(seq,ref)
 @assert aln_seq == aln1.aln_seq1
 @assert aln_ref == aln1.aln_seq2
