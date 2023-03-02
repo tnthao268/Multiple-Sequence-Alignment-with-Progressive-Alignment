@@ -2,28 +2,6 @@ using Pkg
 Pkg.add("BioAlignments")
 using BioAlignments
 
-#macro to check, if the sequence is a dna
-macro dna_str(dna)
-    return quote
-        nu = "ATGC" #indexes of a string is Char-Type
-        
-        #when there is a index, which isn't a DNA nucleotide
-        for i ∈ $(esc(dna)) # \in
-            if i ∉ nu # \notin
-                return 0
-            end
-        end
-        return $(esc(dna))
-    end
-end
-
-#Using macro dna
-dna"ATAV"
-dna"ATAC"
-
-@dna_str "ATTA"
-@dna_str "AXT"
-
 #Function to check DNA structure
 function check_dna(dna::String)
     nu = "ATGC"
@@ -47,6 +25,6 @@ aln = alignment(res)
 collect(aln)
 # -> aln is an array of tuples, which describe all positions in the alignment
 
-#read Alignments: aligned seq und ref (saved in array)
-aln_seq = [x for (x,_) in aln]
-aln_ref = [y for (_,y) in aln]
+#read Alignments: aligned seq und ref (saved in array or string)
+aln_seq = reduce(*,[x for (x,_) in aln]) #String
+aln_ref = [y for (_,y) in aln] #Vector{Char}
