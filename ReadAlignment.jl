@@ -19,27 +19,39 @@ end
 #=  aligns two sequences and save the aligned sequences
     returns a ReadAlignment(score,aln_seq1,aln_seq2)
 =#
-function readDNAAlignment(seq1::String, seq2::String)
-    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -10, gap_extend = -1)
+function readDNAAlignment(dict_pair::Dict{String,String})
     
-    @assert check_DNA(seq1) "seq1 isn't DNA"
-    @assert check_DNA(seq2) "seq2 isn't DNA"
+    #check, if there are 2 sequences for pairwise alignment and if they are DNA seuqences
+    @assert length(dict_pair) == 2 "there are more or less than two sequences to do a pairwise alignment"
+    foreach(keys(dict_pair)) do s
+        if !check_DNA(dict_pair[s])
+            println("s is not a DNA sequence")
+        end
+    end  
 
-    res = pairalign(GlobalAlignment(),seq1,seq2,scoremodel)
+    #pairwise alignment
+    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -10, gap_extend = -1)
+    seq = collect(values(dict_pair))
+    res = pairalign(GlobalAlignment(),seq[1],seq[2],scoremodel)
     aln = alignment(res)
 
     aln_seq1 = [x for (x,_) in aln]
     aln_seq2 = [y for (_,y) in aln]
-
+    
+    println("score: $(score(res))\n$aln")
     ReadAlignment(score(res),aln_seq1,aln_seq2)
 end
 
 #--------------
 #Using example
 include("BioAlignment_Versuch.jl")
+dict_pair = Dict("A" => seq, "B" => ref)
+aln1 = readDNAAlignment(dict_pair)
 
-aln1 = readDNAAlignment(seq,ref)
-@assert aln_seq == aln1.aln_seq1
-@assert aln_ref == aln1.aln_seq2
+#Compare to the results in BioAlignment_Versuch
+@assert aln_seq == aln1.aln_seq2
+@assert aln_ref == aln1.aln_seq1
+
+#Print the instance of an object ReadAlignment
 aln1.aln_seq1
 aln1.score
