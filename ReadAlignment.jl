@@ -1,8 +1,10 @@
+export check_DNA; readDNAAlignment
+
+#--------------
 #ReadAlignment
 struct ReadAlignment
     score::Int64
-    aln_seq1::Vector{Char}
-    aln_seq2::Vector{Char}
+    dict_alnpair::Dict{String,String}
 end
 
 #---------------------------
@@ -31,27 +33,16 @@ function readDNAAlignment(dict_pair::Dict{String,String})
 
     #pairwise alignment
     scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -10, gap_extend = -1)
-    seq = collect(values(dict_pair))
+    name = reverse(collect(keys(dict_pair))) #list of names of sequences (use reverse because LIFO access)
+    seq = reverse(collect(values(dict_pair))) #list of sequences
     res = pairalign(GlobalAlignment(),seq[1],seq[2],scoremodel)
     aln = alignment(res)
 
-    aln_seq1 = [x for (x,_) in aln]
-    aln_seq2 = [y for (_,y) in aln]
+    #sequences in String and a dictionary of them (name, aligned sequence)
+    aln_seq1 = reduce(*,[x for (x,_) in aln])
+    aln_seq2 = reduce(*,[y for (_,y) in aln])
+    dict_alnpair = Dict(zip(name,[aln_seq1,aln_seq2]))
     
     println("score: $(score(res))\n$aln")
-    ReadAlignment(score(res),aln_seq1,aln_seq2)
+    ReadAlignment(score(res),dict_alnpair)
 end
-
-#--------------
-#Using example
-include("BioAlignment_Versuch.jl")
-dict_pair = Dict("A" => seq, "B" => ref)
-aln1 = readDNAAlignment(dict_pair)
-
-#Compare to the results in BioAlignment_Versuch
-@assert aln_seq == aln1.aln_seq2
-@assert aln_ref == aln1.aln_seq1
-
-#Print the instance of an object ReadAlignment
-aln1.aln_seq1
-aln1.score
