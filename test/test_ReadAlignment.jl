@@ -1,4 +1,5 @@
 include("../BioAlignment_Versuch.jl")
+include("../ReadAlignment.jl")
 using Test
 
 #--------------
@@ -10,12 +11,13 @@ s2 = "ATTGD"
 @test !check_DNA(s2)
 
 #------------------
-#Test ReadAlignment
+#Test ReadAlignment : test with the result from BioAlignment_Versuch
 
-dict_pair = Dict("A" => seq, "B" => ref) #seq, ref are sequences in BioAlignment_Versuch
-aln = readDNAAlignment(dict_pair)
+pair = [FastaRecord("A",seq), FastaRecord("B",ref)] #Variables seq and ref are sequences in BioAlignment_Versuch
+aln = readDNAAlignment(pair)
 
 #Compare aligned sequences in ReadAlignment and in BioAlignment_Versuch
-aligned_seq = collect(values(aln.dict_alnpair))
-@test aln_seq in aligned_seq
-@test aln_ref in aligned_seq
+aligned_seqs = aln.aln_pair
+@test aln_seq == aligned_seqs[1].aln_seq
+@test aln_ref == aligned_seqs[2].aln_seq
+@test s == aln.score

@@ -1,5 +1,5 @@
 export check_DNA; readDNAAlignment
-include("source/DataReader.jl")
+using .DataReader
 
 #-------------------
 #AlignmentRecord
@@ -38,7 +38,7 @@ function readDNAAlignment(pair::Vector{FastaRecord})
     end
 
     #pairwise alignment
-    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -10, gap_extend = -1)
+    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -5, gap_extend = -1)
     res = pairalign(GlobalAlignment(),pair[1].sequence,pair[2].sequence,scoremodel)
     aln = alignment(res)
 
