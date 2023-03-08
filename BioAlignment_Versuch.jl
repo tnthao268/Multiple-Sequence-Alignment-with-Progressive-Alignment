@@ -25,6 +25,6 @@ aln = alignment(res)
 collect(aln)
 # -> aln is an array of tuples, which describe all positions in the alignment
 
-#read Alignments: aligned seq und ref (saved in array or string)
-aln_seq = reduce(*,[x for (x,_) in aln]) #String
-aln_ref = [y for (_,y) in aln] #Vector{Char}
+#read Alignments: aligned seq und ref (saved in string)
+aln_seq = reduce(*,[x for (x,_) in aln])
+aln_ref = reduce(*,[y for (_,y) in aln])

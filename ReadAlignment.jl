@@ -1,8 +1,18 @@
+export check_DNA; readDNAAlignment
+using .DataReader
+
+#-------------------
+#AlignmentRecord
+struct AlignmentRecord
+    description::String
+    aln_seq::String
+end
+
+#--------------
 #ReadAlignment
 struct ReadAlignment
     score::Int64
-    aln_seq1::Vector{Char}
-    aln_seq2::Vector{Char}
+    aln_pair::Vector{AlignmentRecord}
 end
 
 #---------------------------
@@ -19,39 +29,25 @@ end
 #=  aligns two sequences and save the aligned sequences
     returns a ReadAlignment(score,aln_seq1,aln_seq2)
 =#
-function readDNAAlignment(dict_pair::Dict{String,String})
+function readDNAAlignment(pair::Vector{FastaRecord})
     
     #check, if there are 2 sequences for pairwise alignment and if they are DNA seuqences
-    @assert length(dict_pair) == 2 "there are more or less than two sequences to do a pairwise alignment"
-    foreach(keys(dict_pair)) do s
-        if !check_DNA(dict_pair[s])
-            println("s is not a DNA sequence")
-        end
-    end  
+    @assert length(pair) == 2 "there are more or less than two sequences to do a pairwise alignment"
+    foreach(pair) do s
+         @assert check_DNA(s.sequence) "$(s.description) is not a DNA sequence"
+    end
 
     #pairwise alignment
-    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -10, gap_extend = -1)
-    seq = collect(values(dict_pair))
-    res = pairalign(GlobalAlignment(),seq[1],seq[2],scoremodel)
+    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -5, gap_extend = -1)
+    res = pairalign(GlobalAlignment(),pair[1].sequence,pair[2].sequence,scoremodel)
     aln = alignment(res)
 
-    aln_seq1 = [x for (x,_) in aln]
-    aln_seq2 = [y for (_,y) in aln]
+    #sequences in String and create list of AlignmentRecord(description, aligned sequence)
+    aln_seq1 = reduce(*,[x for (x,_) in aln])
+    aln_seq2 = reduce(*,[y for (_,y) in aln])
+    aln_records = [AlignmentRecord(pair[1].description, aln_seq1),
+                   AlignmentRecord(pair[2].description, aln_seq2)]
     
     println("score: $(score(res))\n$aln")
-    ReadAlignment(score(res),aln_seq1,aln_seq2)
+    ReadAlignment(score(res),aln_records)
 end
-
-#--------------
-#Using example
-include("BioAlignment_Versuch.jl")
-dict_pair = Dict("A" => seq, "B" => ref)
-aln1 = readDNAAlignment(dict_pair)
-
-#Compare to the results in BioAlignment_Versuch
-@assert aln_seq == aln1.aln_seq2
-@assert aln_ref == aln1.aln_seq1
-
-#Print the instance of an object ReadAlignment
-aln1.aln_seq1
-aln1.score
