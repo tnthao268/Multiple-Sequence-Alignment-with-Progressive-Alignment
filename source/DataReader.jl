@@ -4,19 +4,19 @@ import Pkg
 Pkg.add("FastaIO")
 using FastaIO
 
-export readSequences, FastaRecord
+export readSequences, Record
 
 # create an immutable data type to store sequence and its description 
-struct FastaRecord
+struct Record
     description :: AbstractString
     sequence :: AbstractString
 end
 
 function readSequences(input_file_name :: AbstractString)
-    records = FastaRecord[] # records is type FastaRecord
+    records = Record[] # records is type FastaRecord
     FastaReader(input_file_name) do fr
         for (desc, seq) in fr
-            push!(records,FastaRecord("$desc","$seq"))
+            push!(records,Record("$desc","$seq"))
             
         end
     end
