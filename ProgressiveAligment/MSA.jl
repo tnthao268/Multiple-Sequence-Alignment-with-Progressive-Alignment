@@ -145,7 +145,7 @@ end
     parameter two lists of Records. These lists contain groups of sequences, which are read from Guild Tree for Progressive Alignment
     return Traceback Matrix
 =#
-function globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -5)
+function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -5)
     #check, if 2 lists of Records has minimal 1 Records
     @assert (length(aln_seqs1) >= 1 && length(aln_seqs2) >= 2) ||
             (length(aln_seqs2) >= 1 && length(aln_seqs1) >= 2)
@@ -202,29 +202,32 @@ function globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, ga
     for y in 1:length(aln_seqs2)
         aln_seqs2[y].sequence = new_aln_seqs[2][y]
     end
+    
+    #print the score matrix, the traceback matrix and the alignment score
     println("scorematrix:",typeof(scorematrix))
     for x in 1:len2; println(scorematrix[x,:]); end
     println("traceback:")
     for x in 2:len2; println(traceback[x,2:len1]); end
     println("Alignment Score: $(scorematrix[len2,len1])")
+    
     aln_seqs1,aln_seqs2
 end
 
 #Examples
 aln_seqs1 = Record[Record("seq1","AA-GC"), Record("seq2","AATGC")]
 aln_seqs2 = Record[Record("seq3","ACTC")]
-globalAlignment(aln_seqs1,aln_seqs2)
+msa_globalAlignment(aln_seqs1,aln_seqs2)
 aln_seqs1
 aln_seqs2
 
 aln_seqs3 = Record[Record("s1","AATCGAG"), Record("s2","AA-CGAG")]
 aln_seqs4 = Record[Record("s3","ACCGAG"), Record("s4","ACGGAG")]
-globalAlignment(aln_seqs3,aln_seqs4) 
+msa_globalAlignment(aln_seqs3,aln_seqs4) 
 aln_seqs3
 aln_seqs4
 
 aln_seqs7 = [Record("1","ATTTTACG"),Record("2","AT---ACG")]
 aln_seqs8 = [Record("3","AACG"),Record("4","A-CG")]
-globalAlignment(aln_seqs7,aln_seqs8)
+msa_globalAlignment(aln_seqs7,aln_seqs8)
 aln_seqs7
 aln_seqs8
