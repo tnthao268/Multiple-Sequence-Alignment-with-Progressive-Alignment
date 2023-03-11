@@ -7,89 +7,108 @@ leaf_names = ["A" , "B", "C", "D" , "E"]
 
 using MCPhyloTree
 tree = upgma(m, leaf_names)
-node_a = find_by_name(tree,"A")
 
-# function to return all names of tree's leaves
-function return_leaves(tree::GeneralNode)
-    leafnames = []
-        for x in get_leaves(tree)
-            push!(leafnames,x.name)
-        end
-    return leafnames
-end
+# change name of a cluster into combination of its children' name (e.g "AB")
 
-# function to return an array which contains leaves of the tree based on name, return GeneralNode
-function find_leaves(leafname::Vector)
-    leaves = []
-    for l in leafname
-        push!(leaves, find_by_name(tree,l))
-    end
-    return leaves
-end
-
-# find_leaves(return_leaves(tree))
-
-# find cluster to do pairwise alignment
-
-function findCluster(tree::GeneralNode)
-    # create new 2 dimension array which contains pair of alignment
-    saved_cluster = []
-    # for every leaf of a tree (every sequence in distance matrix)
-    for m in find_leaves(return_leaves(tree))
-        for n in find_leaves(return_leaves(tree)) 
-            # if 2 sequences are grouped together (with same length)
-            if path_length(m.mother,m) == path_length(n.mother,n) && m != n
-                push!(saved_cluster,[m,n]) # add these two in the array
-            end
+function children(cluster::GeneralNode)
+    i = ""
+    for j in cluster.children
+        if length(i) > 1 && length(j.name) > 1#  if the name is the combination of more than 1 leaf
+            i = "(" * i * ")" * "," * "(" * j.name * ")"  # add also the brackets in between the clusters, eg: "AB(E)"
+        elseif length(i) > 1 && length(j.name) == 1
+            i = "(" * i * ")" * ","  * j.name 
+        else
+            i = i * j.name # otherwise no brackets: eg: "AB"
         end
     end
-    return saved_cluster
+    return i
 end
 
-#c = findCluster(tree)
-# c[1][1].name
-# c[1][2].name
+# test: children(find_by_name(tree,"Cluster_1"))
 
-# function to get rid of duplicate pairs of sequences 
-function cluster_name(c::Vector{Any})
-    name = []
-    # index of pair in c
-    for i in 1:length(c)
-        # add the name of sequences in pair to name array
-        push!(name,[c[i][1].name,c[i][2].name])
+# return tree with changed cluster's name which are combination of its children' name (e.g "AB")
+
+function change_cluster_name(tree::GeneralNode)
+    post_list = post_order(tree)
+    for node in post_list
+        if length(node.children) > 0
+            node.name = children(node)
+        end
     end
-    # iterate through name array
-    for i in name
-        # sort elements in the alphabetical order
-        sort!(i) # sort array in-place (sort() does not work)
-    end
-    return collect(Set(name)) # duplicate elements are ruled out
+    return tree
 end
+
+
+# change_cluster_name(tree) 
+
+# return raw list of strings which are cluster's name
+
+function cluster_list(tree::GeneralNode)
+    cluster_list = []
+    post_list = post_order(tree) # traverse the tree and return a list of nodes
+    for node in post_list
+        if length(node.children) > 0 # only adds nodes which have more than 0 children into the cluster list
+            push!(cluster_list, node.name)
+        end
+    end
+    return cluster_list
+end
+#= e.g 4-element Vector{Any}:
+ "CD"
+ "AB"
+ "AB(E)"
+ "CD(AB(E))"
+ =#
+
+# still try, NOT CORRECT YET
+# method to split string into meaningful name of sequences to be aligned and store them in a list 
+function split_name_sequences(cluster_list::Vector{Any})
+    list = []
+    for name in cluster_list
+        if length(name) < 3
+            push!(list, split(name,""))
+        else
+            push!(list, split(name,"),(", limit = 2))
         
-# cluster_name(findCluster(tree))
-
-# function to return next node for alignment with paired alignment
-function next_node_align(aligned_node::GeneralNode)
-    for i in find_leaves(return_leaves(tree))
-        if aligned_node.mother.mother == i.mother
-                return i.name
         end
+        
     end
+    new_lst = []
+    for i in list
+        l = []
+        for j in i 
+            push!(l,replace(j, ")" => "", "(" => ""))
+        end
+        push!(new_lst,l)
+    
+    end
+
+    return new_lst
 end
 
+#= eg:4-element Vector{Any}:
+ Any["C", "D"]
+ Any["A", "B"]
+ Any["AB", "E"]
+ Any["CD", "ABE"]
+ =#
 
-# Add new alignment pairs in set
-function automatic_add_alignment_pair(list::Vector)
-    # find node by name (first element of every pair in set)
-    for j in list
-        node = find_by_name(tree,j[1])
-        if next_node_align(node) !== nothing
-            push!(list,[next_node_align(node), node.name])
 
-        end
+split_name_sequences(cluster_list(change_cluster_name(upgma(m, leaf_names))))
 
-    end
-    return list
-end
 
-automatic_add_alignment_pair(cluster_name(findCluster(tree)))
+tree1 = ParseNewick("(((A:8,B:5)F:2,C:10)G:1,(D:12,E:4)H:3)R:1;")
+print_ascii(tree1)
+
+cluster_list(change_cluster_name(tree))
+
+cluster_list(change_cluster_name(tree1))
+split_name_sequences(cluster_list(change_cluster_name(tree1)))
+
+tree2 = ParseNewick("((A:5,B:5)C:9,(D:5,E:5)F:5)G:5;")
+print_ascii(tree2)
+split_name_sequences(cluster_list(change_cluster_name(tree2)))
+
+tree3 = ParseNewick("(((A,B)C)D,(E)F,G)H;")
+print_ascii(tree3)
+split_name_sequences(cluster_list(change_cluster_name(tree3)))
