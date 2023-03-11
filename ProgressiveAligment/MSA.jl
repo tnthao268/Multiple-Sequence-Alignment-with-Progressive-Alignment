@@ -23,7 +23,7 @@ function getPairScore(n1::String,n2::String,gap_open=-5,gap_extend=-1)
     c1 = n1[2]; c2 = n2[2]
     if '-' in [c1,c2]
         if c1 == c2
-            return n1[1] != n2[1] ? 0 : gap_open
+            return n1[1] == n2[1] == '-' ? gap_open : 0
         else
             return n1[1] != n2[1] && (n1[1] == c1 == '-' || n2[1] == c2 == '-') ?  gap_extend : gap_open
         end
@@ -34,11 +34,12 @@ end
 #Test 
 @test EDNAFULL['A','A'] == getPairScore("-A","AA")
 @test gap_open == getPairScore("AA","T-")
-@test gap_extend == getPairScore("--","TT")
-@test getPairScore("T-","A-") == 0
 @test gap_open == getPairScore("-T","A-")
 @test gap_open == getPairScore("-T","--")
 @test gap_open == getPairScore("--","--")
+@test getPairScore("A-","--") == 0
+@test getPairScore("T-","A-") == 0
+@test gap_extend == getPairScore("--","TT")
 
 #------------
 #=  get sum of pairs score (SoP) at a position in the progressive alignment
@@ -49,7 +50,7 @@ end
 function getSoP_at_a_pos(seqs1::Vector{String},seqs2::Vector{String},pos1::Int64, pos2::Int64)
     chars1 = pos1 > 1 ? [x[pos1-1:pos1] for x in seqs1] : ['A' * x[pos1] for x in seqs1]
     chars2 = pos2 > 1 ? [y[pos2-1:pos2] for y in seqs2] : ['A' * y[pos2] for y in seqs2]
-
+    #println(chars1,"\n",chars2)
     local score = 0
     for x in chars1
         for y in chars2
@@ -69,6 +70,9 @@ sop = getSoP_at_a_pos(seqs1,seqs2,1,1)
 #(['A','A','-'],['C','-']) --> (AC + A-)*2 + -C + -- 
 test_sop = (-4 + gap_open)*2 + gap_open + 0
 @test sop == test_sop
+sop2 = getSoP_at_a_pos(seqs1,seqs2,2,2)
+test_sop2 = -4*3 + -5 + -1*2
+@test sop2 == test_sop2
 
 #---------------------------------
 #=  set values in Traceback Matrix
