@@ -7,7 +7,7 @@ using FastaIO
 export readSequences, Record
 
 # create an immutable data type to store sequence and its description 
-struct Record
+mutable struct Record
     description :: AbstractString
     sequence :: AbstractString
 end

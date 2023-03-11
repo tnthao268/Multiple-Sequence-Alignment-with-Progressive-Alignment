@@ -1,11 +1,11 @@
 include("../DistanceMatrix.jl")
 using Test
 
-s1 = FastaRecord("Seq1","TCAGGATGAAC")
-s2 = FastaRecord("Seq2","ATCACGATGAACC")
-s3 = FastaRecord("Seq3","ATCAGGAATGAATCC")
-s4 = FastaRecord("Seq4","TCACGATTGAATCGC")
-s5 = FastaRecord("Seq5","TCAGGAATGAATCGC")
+s1 = Record("Seq1","TCAGGATGAAC")
+s2 = Record("Seq2","ATCACGATGAACC")
+s3 = Record("Seq3","ATCAGGAATGAATCC")
+s4 = Record("Seq4","TCACGATTGAATCGC")
+s5 = Record("Seq5","TCAGGAATGAATCGC")
 records = [s1,s2,s3,s4,s5]
 
 distanceMatrix = [  0 34 36 32 41;
