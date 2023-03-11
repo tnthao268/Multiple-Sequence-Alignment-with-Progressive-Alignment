@@ -1,5 +1,4 @@
-# Dictionary of EDNAFull
-
+# Multi Sequences Alignment: Alignment of alignment and a sequence or of 2 alignments (not for Pairwise Alignment) 
 using Pkg
 Pkg.add("BioAlignments")
 using BioAlignments
@@ -14,23 +13,32 @@ EDNAFULL
 gap_open = -5
 gap_extend = -1
 #---------------------------
-#=  get pair score
-    paremeter n1, n2 can be nucleotides or gaps
+#=  get pair score of second characters of 2 String parameters
+    parameter each of n1, n2 is a string of 2 characters, which stand next to each other in the sequence.
+              gap_open penalty and gap_extend penalty
     return pair score
 =#
-function getPairScore(n1::Char,n2::Char,gap_open=-5,gap_extend=-1)
-    if '-' in [n1,n2]
-        if n1 == n2; return gap_extend; end
-        return gap_open
+function getPairScore(n1::String,n2::String,gap_open=-5,gap_extend=-1)
+    @assert length(n1) == length(n2) == 2
+    c1 = n1[2]; c2 = n2[2]
+    if '-' in [c1,c2]
+        if c1 == c2
+            return n1[1] != n2[1] ? 0 : gap_open
+        else
+            return n1[1] != n2[1] && (n1[1] == c1 == '-' || n2[1] == c2 == '-') ?  gap_extend : gap_open
+        end
     end
-    return EDNAFULL[n1,n2]
+    return EDNAFULL[c1,c2]
 end
 
 #Test 
-@test EDNAFULL['A','A'] == getPairScore('A','A')
-@test gap_open == getPairScore('A','-')
-@test getPairScore('A','-',-10) == -10
-@test getPairScore('-','-') == gap_extend
+@test EDNAFULL['A','A'] == getPairScore("-A","AA")
+@test gap_open == getPairScore("AA","T-")
+@test gap_extend == getPairScore("--","TT")
+@test getPairScore("T-","A-") == 0
+@test gap_open == getPairScore("-T","A-")
+@test gap_open == getPairScore("-T","--")
+@test gap_open == getPairScore("--","--")
 
 #------------
 #=  get sum of pairs score (SoP) at a position in the progressive alignment
@@ -38,10 +46,9 @@ end
             seqs2 is a list of second sequence(s)
             pos1, pos2 are positions on seqs1 and seqs2 for SoP calculation
 =#
-
 function getSoP_at_a_pos(seqs1::Vector{String},seqs2::Vector{String},pos1::Int64, pos2::Int64)
-    chars1 = [x[pos1] for x in seqs1]
-    chars2 = [y[pos2] for y in seqs2]
+    chars1 = pos1 > 1 ? [x[pos1-1:pos1] for x in seqs1] : ['A' * x[pos1] for x in seqs1]
+    chars2 = pos2 > 1 ? [y[pos2-1:pos2] for y in seqs2] : ['A' * y[pos2] for y in seqs2]
 
     local score = 0
     for x in chars1
@@ -58,9 +65,9 @@ seqs1 = ["ATAT";
          "-TTA"]
 seqs2 = ["CAA";
          "--AA"]
-#(['A','A','-'],['C','-']) --> (AC + A-)* 2 + -C + -- 
 sop = getSoP_at_a_pos(seqs1,seqs2,1,1)
-test_sop = (getPairScore('A','C') + getPairScore('A','-')) * 2 + getPairScore('-','C') + getPairScore('-','-')
+#(['A','A','-'],['C','-']) --> (AC + A-)*2 + -C + -- 
+test_sop = (-4 + gap_open)*2 + gap_open + 0
 @test sop == test_sop
 
 #---------------------------------
@@ -174,8 +181,8 @@ function globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, ga
     #add values in Score Matrix
     for i in 2:len2
         for j in 2:len1
-            ver = scorematrix[i-1,j] + gap_open*length(seqs1)*length(seqs2) # = get SoP('-'*length(seqs2),length(seqs1))
-            hor = scorematrix[i,j-1] + gap_open*length(seqs1)*length(seqs2) # = get SoP('-'*length(seqs1),length(seqs2))
+            ver = scorematrix[i-1,j] + getSoP_at_a_pos(seqs1,[y[1:i-1] * '-' for y in seqs2],j,i) #add a gap in a copie of sequence, calculate SoP of opening gap.
+            hor = scorematrix[i,j-1] + getSoP_at_a_pos([x[1:j-1] * '-' for x in seqs1],seqs2,j,i) #use copie to not change the sequence before the finish the scorematrix
             dia = scorematrix[i-1,j-1] + getSoP_at_a_pos(seqs1,seqs2,j,i)
 
             scorematrix[i,j] = max(dia,ver,hor)
@@ -195,6 +202,7 @@ function globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, ga
     for x in 1:len2; println(scorematrix[x,:]); end
     println("traceback:")
     for x in 2:len2; println(traceback[x,2:len1]); end
+    println("Alignment Score: $(scorematrix[len2,len1])")
     aln_seqs1,aln_seqs2
 end
 
@@ -207,8 +215,12 @@ aln_seqs2
 
 aln_seqs3 = Record[Record("s1","AATCGAG"), Record("s2","AA-CGAG")]
 aln_seqs4 = Record[Record("s3","ACCGAG"), Record("s4","ACGGAG")]
-new_aln_seqs34 = [Record[Record("s1","AATCGAG"), Record("s2","AA-CGAG")],
-                Record[Record("s3","A-CCGAG"), Record("s4","A-CGGAG")]]
 globalAlignment(aln_seqs3,aln_seqs4) 
 aln_seqs3
 aln_seqs4
+
+aln_seqs7 = [Record("1","ATTTTACG"),Record("2","AT---ACG")]
+aln_seqs8 = [Record("3","AACG"),Record("4","A-CG")]
+globalAlignment(aln_seqs7,aln_seqs8)
+aln_seqs7
+aln_seqs8
