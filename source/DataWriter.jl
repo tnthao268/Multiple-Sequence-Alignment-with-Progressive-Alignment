@@ -13,7 +13,7 @@ export writeSequences
 function key_max(dict::Dict{Any,Any})
     key_max = ""
     for key in keys(dict)
-        if length(split(key," ")[1]) > length(key_max) # gets only "NM..." part of description
+        if length(split(key," ")[1]) > length(key_max) # gets only "NC..." part of description
             key_max = split(key," ")[1]
         end
     end
