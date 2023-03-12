@@ -108,7 +108,7 @@ function getAlignment(seqs1::Vector{String},seqs2::Vector{String},traceback::Mat
         j -= 1
     end
     
-    new_aln_seqs1,new_aln_seqs2
+    (new_aln_seqs1 = new_aln_seqs1, new_aln_seqs2 = new_aln_seqs2)
 end
 
 #=  Global Alignment of (aligned) sequences by Needlemann Wunsch methode:
@@ -169,10 +169,10 @@ function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}
     #update the lists of Records aln_seqs1, aln_seqs2 with the alignment
     new_aln_seqs = getAlignment(seqs1,seqs2,traceback)
     for x in 1:length(aln_seqs1)
-        aln_seqs1[x].sequence = new_aln_seqs[1][x]
+        aln_seqs1[x].sequence = new_aln_seqs.new_aln_seqs1[x]
     end
     for y in 1:length(aln_seqs2)
-        aln_seqs2[y].sequence = new_aln_seqs[2][y]
+        aln_seqs2[y].sequence = new_aln_seqs.new_aln_seqs2[y]
     end
     
     #print the score matrix, the traceback matrix and the alignment score
@@ -182,13 +182,13 @@ function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}
     for x in 2:len2; println(traceback[x,2:len1]); end
     println("Alignment Score: $(scorematrix[len2,len1])")
     
-    aln_seqs1,aln_seqs2
+    (aln_seqs1 = aln_seqs1, aln_seqs2 = aln_seqs2)
 end
 
  #Example
-aln_seqs3 = Record[Record("s1","AATCGAG"), Record("s2","AA-CGAG")]
-aln_seqs4 = Record[Record("s3","ACCGAG"), Record("s4","ACGGAG")]
-msa_globalAlignment(aln_seqs3,aln_seqs4)
+aln_seqs1 = Record[Record("s1","AATCGAG"), Record("s2","AA-CGAG")]
+aln_seqs2 = Record[Record("s3","ACCGAG"), Record("s4","ACGGAG")]
+msa = msa_globalAlignment(aln_seqs1,aln_seqs2)
 #=
 scorematrix:
 [0, -20, -40, -50, -70, -90, -110, -130]
@@ -208,13 +208,16 @@ traceback:
 Alignment Score: 46
 (Record[Record("s1", "AATCGAG"), Record("s2", "AA-CGAG")], Record[Record("s3", "AC-CGAG"), Record("s4", "AC-GGAG")])
 =# 
-aln_seqs3
+msa.aln_seqs1 == aln_seqs1 # this means the variable is also updated after methode
+#true
+
+msa.aln_seqs2
 #=
 2-element Vector{Record}:
- Record("s1", "AATCGAG")
- Record("s2", "AA-CGAG")
+ Record("s3", "AC-CGAG")
+ Record("s4", "AC-GGAG")
  =#
-aln_seqs4
+aln_seqs2
 #=
 2-element Vector{Record}:
  Record("s3", "AC-CGAG")
