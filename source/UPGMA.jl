@@ -1,3 +1,4 @@
+module UPGMA
 import Pkg
 Pkg.add("MCPhyloTree")
 
@@ -6,17 +7,16 @@ m = convert(Array{Float64}, m)
 leaf_names = ["A" , "B", "C", "D" , "E"]
 
 using MCPhyloTree
-tree = upgma(m, leaf_names)
+
 
 # change name of a cluster into combination of its children' name (e.g "AB")
 
 function children(cluster::GeneralNode)
     i = ""
     for j in cluster.children
-        if length(i) > 1 && length(j.name) > 1#  if the name is the combination of more than 1 leaf
+        if length(i) > 1 && length(j.name) >= 1 #  if the name is the combination of more than 1 leaf
             i = "(" * i * ")" * "," * "(" * j.name * ")"  # add also the brackets in between the clusters, eg: "AB(E)"
-        elseif length(i) > 1 && length(j.name) == 1
-            i = "(" * i * ")" * ","  * j.name 
+       
         else
             i = i * j.name # otherwise no brackets: eg: "AB"
         end
@@ -47,7 +47,7 @@ function cluster_list(tree::GeneralNode)
     cluster_list = []
     post_list = post_order(tree) # traverse the tree and return a list of nodes
     for node in post_list
-        if length(node.children) > 0 # only adds nodes which have more than 0 children into the cluster list
+        if length(node.children) > 1 # only adds nodes which have more than 0 children into the cluster list
             push!(cluster_list, node.name)
         end
     end
@@ -73,6 +73,8 @@ function split_name_sequences(cluster_list::Vector{Any})
         end
         
     end
+
+    
     new_lst = []
     for i in list
         l = []
@@ -83,7 +85,20 @@ function split_name_sequences(cluster_list::Vector{Any})
     
     end
 
-    return new_lst
+    # filter comma in a string
+    new_lst2 = []
+
+    for i in new_lst
+        l = []
+        for j in i 
+            push!(l,replace(j, "," => ""))
+        end
+        push!(new_lst2,l)
+    
+    end
+    
+
+    return unique(new_lst2) # to avoid duplicate elements in a list 
 end
 
 #= eg:4-element Vector{Any}:
@@ -94,21 +109,7 @@ end
  =#
 
 
+
 split_name_sequences(cluster_list(change_cluster_name(upgma(m, leaf_names))))
 
-
-tree1 = ParseNewick("(((A:8,B:5)F:2,C:10)G:1,(D:12,E:4)H:3)R:1;")
-print_ascii(tree1)
-
-cluster_list(change_cluster_name(tree))
-
-cluster_list(change_cluster_name(tree1))
-split_name_sequences(cluster_list(change_cluster_name(tree1)))
-
-tree2 = ParseNewick("((A:5,B:5)C:9,(D:5,E:5)F:5)G:5;")
-print_ascii(tree2)
-split_name_sequences(cluster_list(change_cluster_name(tree2)))
-
-tree3 = ParseNewick("(((A,B)C)D,(E)F,G)H;")
-print_ascii(tree3)
-split_name_sequences(cluster_list(change_cluster_name(tree3)))
+end
