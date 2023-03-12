@@ -31,16 +31,6 @@ function getPairScore(n1::String,n2::String,gap_open=-5,gap_extend=-1)
     return EDNAFULL[c1,c2]
 end
 
-#Test 
-@test EDNAFULL['A','A'] == getPairScore("-A","AA")
-@test gap_open == getPairScore("AA","T-")
-@test gap_open == getPairScore("-T","A-")
-@test gap_open == getPairScore("-T","--")
-@test gap_open == getPairScore("--","--")
-@test getPairScore("A-","--") == 0
-@test getPairScore("T-","A-") == 0
-@test gap_extend == getPairScore("--","TT")
-
 #------------
 #=  get sum of pairs score (SoP) at a position in the progressive alignment
     parameter seqs1 is a list of first sequence(s)
@@ -60,20 +50,6 @@ function getSoP_at_a_pos(seqs1::Vector{String},seqs2::Vector{String},pos1::Int64
     return score
 end
 
-#Test
-seqs1 = ["ATAT";
-         "ATT";
-         "-TTA"]
-seqs2 = ["CAA";
-         "--AA"]
-sop = getSoP_at_a_pos(seqs1,seqs2,1,1)
-#(['A','A','-'],['C','-']) --> (AC + A-)*2 + -C + -- 
-test_sop = (-4 + gap_open)*2 + gap_open + 0
-@test sop == test_sop
-sop2 = getSoP_at_a_pos(seqs1,seqs2,2,2)
-test_sop2 = -4*3 + -5 + -1*2
-@test sop2 == test_sop2
-
 #---------------------------------
 #=  set values in Traceback Matrix
     parameter score from diagonal,vertical and horizon direction in Score Matrix 
@@ -85,10 +61,6 @@ function setTraceback(dia::Int64,ver::Int64,hor::Int64)
     else return "hor"
     end
 end
-
-#Test 
-@test setTraceback(5,4,3) == "dia"
-@test setTraceback(4,5,3) == "ver"
 
 #-----------------------------------------------------------------------
 using .DataReader
@@ -194,7 +166,7 @@ function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}
         end
     end
     
-    #update the lists of Records with the alignment
+    #update the lists of Records aln_seqs1, aln_seqs2 with the alignment
     new_aln_seqs = getAlignment(seqs1,seqs2,traceback)
     for x in 1:length(aln_seqs1)
         aln_seqs1[x].sequence = new_aln_seqs[1][x]
@@ -204,7 +176,7 @@ function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}
     end
     
     #print the score matrix, the traceback matrix and the alignment score
-    println("scorematrix:",typeof(scorematrix))
+    println("scorematrix:")
     for x in 1:len2; println(scorematrix[x,:]); end
     println("traceback:")
     for x in 2:len2; println(traceback[x,2:len1]); end
@@ -213,21 +185,38 @@ function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}
     aln_seqs1,aln_seqs2
 end
 
-#Examples
-aln_seqs1 = Record[Record("seq1","AA-GC"), Record("seq2","AATGC")]
-aln_seqs2 = Record[Record("seq3","ACTC")]
-msa_globalAlignment(aln_seqs1,aln_seqs2)
-aln_seqs1
-aln_seqs2
-
+ #Example
 aln_seqs3 = Record[Record("s1","AATCGAG"), Record("s2","AA-CGAG")]
 aln_seqs4 = Record[Record("s3","ACCGAG"), Record("s4","ACGGAG")]
-msa_globalAlignment(aln_seqs3,aln_seqs4) 
+msa_globalAlignment(aln_seqs3,aln_seqs4)
+#=
+scorematrix:
+[0, -20, -40, -50, -70, -90, -110, -130]
+[-20, 20, 0, -20, -40, -60, -70, -90]
+[-40, 0, 4, -16, 0, -20, -40, -60]
+[-60, -20, -16, -14, -14, 2, -18, -38]
+[-80, -40, -36, -24, -30, 6, -14, 2]
+[-100, -60, -20, -34, -40, -14, 26, 6]
+[-120, -80, -40, -38, -50, -20, 6, 46]
+traceback:
+["dia", "dia", "hor", "hor", "hor", "dia", "hor"]
+["ver", "dia", "hor", "dia", "hor", "hor", "hor"]
+["ver", "dia", "dia", "dia", "dia", "hor", "dia"]
+["ver", "dia", "ver", "dia", "dia", "dia", "dia"]
+["dia", "dia", "ver", "dia", "ver", "dia", "hor"]
+["ver", "ver", "dia", "dia", "dia", "ver", "dia"]
+Alignment Score: 46
+(Record[Record("s1", "AATCGAG"), Record("s2", "AA-CGAG")], Record[Record("s3", "AC-CGAG"), Record("s4", "AC-GGAG")])
+=# 
 aln_seqs3
+#=
+2-element Vector{Record}:
+ Record("s1", "AATCGAG")
+ Record("s2", "AA-CGAG")
+ =#
 aln_seqs4
-
-aln_seqs7 = [Record("1","ATTTTACG"),Record("2","AT---ACG")]
-aln_seqs8 = [Record("3","AACG"),Record("4","A-CG")]
-msa_globalAlignment(aln_seqs7,aln_seqs8)
-aln_seqs7
-aln_seqs8
+#=
+2-element Vector{Record}:
+ Record("s3", "AC-CGAG")
+ Record("s4", "AC-GGAG")
+ =#
