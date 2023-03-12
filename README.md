@@ -34,7 +34,27 @@ sequence = readSequences(dirname(@__FILE__()) * "/..data/sequence.fasta")
 
 ```
 
-2. 
+2. **Distance Matrix and Dictionary** 
+
+Use **records_sequences** as parameter to create a **Distance Matrix** and a **Dictionary**. 
+
+
+```
+distanceMatrix = createDistanceMatrix(records) 
+
+dict = createDictionary(records) 
+
+```
+
+**dict** is a NamedTuple, which has **dict_records** and **leave_names**. **leave_names** is a list of letters in the alphabet. Each letter presents a **Record** from **records_sequences**. And they are described as keys and values of dictionary **dict_records**. 
+
+```
+
+dict_records = dict.dict_records 
+
+leaf_names = dict.leaf_names 
+
+```
 3. **Guild Tree (UPGMA)**
 
 Here **UPGMA** is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
@@ -50,7 +70,17 @@ guildTree_instruction = split_name_sequences(cluster_list(change_cluster_name(tr
 ```
 tree = upgma(distanceMatrix,leaf_names)
 ```
-4.
+4. **Progressive Alignment**
+
+**guildTree_instruction** shows pairs, which will be aligned, in order. A pair can be 2 sequences (pairwise alignment), or sequence-alignment or 2 alignments (multi sequences alignment).  
+
+To run the Progressive Alignment call the method: 
+```
+
+result = progressiveAlignment(guildTree_instruction, dict_records) 
+```
+
+The result returns a dictionary of Records, which contain all aligned sequences.  
 5. **DataWriter**
 
 The aligned sequences are written in a text file format 
