@@ -1,10 +1,9 @@
-module DataWriter
 
 include("DataReader.jl")
 
-using .DataReader
+# using .DataReader
 
-import .DataReader.Record
+# import .DataReader.Record
 
 export writeSequences
 
@@ -52,19 +51,26 @@ function writeSequences(output_file_name::String,dict_seq::Dict{String,Record})
 
     end
 
-    for i in 1:length(values(sequences_dict))
+    
 
-        for (description,sequence) in sequences_dict
+    for sequence in values(sequences_dict)
+        x = length(split_sequence(sequence,50))
+    
+    
+        for i in 1:x
+
+            for (description,sequence) in sequences_dict
        
-            # write description right-justified in the beginning (write only "NM..." part of description)
-            # and sequence with maximal length of 50 next to it in each line
-            write(output_file,rpad(split(description," ")[1],length(key_max(sequences_dict))) * " " * split_sequence(sequence,10)[i] ) 
-            write(output_file,"\n")
+                # write description right-justified in the beginning (write only "NM..." part of description)
+                # and sequence with maximal length of 50 next to it in each line
+                write(output_file,rpad(split(description," ")[1],length(key_max(sequences_dict))) * " " * split_sequence(sequence,50)[i] ) 
+                write(output_file,"\n")
             
-        end
+            end
         write(output_file,"\n")
 
 
+        end
     end
     close(output_file)
     # return sequences_dict
@@ -73,10 +79,9 @@ function writeSequences(output_file_name::String,dict_seq::Dict{String,Record})
 
 end
 
-end
 
-# create arrays of chunks cut from sequences
-# loop through the array[1] -> [n] for each sequence
+
+
 
 
 
