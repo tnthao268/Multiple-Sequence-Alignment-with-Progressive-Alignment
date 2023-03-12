@@ -1,5 +1,3 @@
-module DataReader
-
 import Pkg
 Pkg.add("FastaIO")
 using FastaIO
@@ -24,4 +22,3 @@ function readSequences(input_file_name :: AbstractString)
 end
 
 
-end
