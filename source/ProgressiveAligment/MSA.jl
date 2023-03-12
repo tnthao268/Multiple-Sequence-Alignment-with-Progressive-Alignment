@@ -2,8 +2,6 @@
 using Pkg
 Pkg.add("BioAlignments")
 using BioAlignments
-Pkg.add("BioSymbols")
-using BioSymbols
 
 #-----
 #Data
@@ -61,7 +59,7 @@ function setTraceback(dia::Int64,ver::Int64,hor::Int64)
 end
 
 #-----------------------------------------------------------------------
-using .DataReader
+include("../DataReader.jl")
 #Multi Sequences Alignment mit  Global Alignment (Needleman Wunsch Alignment)
 #=  get alignment from reading the Traceback Matrix
     parameter seqs1 and seqs2 are the sequences starts with '-' 

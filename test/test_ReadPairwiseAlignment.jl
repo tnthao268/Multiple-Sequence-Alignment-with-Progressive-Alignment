@@ -1,4 +1,4 @@
-include("../BioAlignment_Versuch.jl")
+include("BioAlignment_Versuch.jl")
 include("../source/ReadPairwiseAlignment.jl")
 using Test
 
@@ -14,7 +14,7 @@ s2 = "ATTGD"
 #Test ReadAlignment : test with the result from BioAlignment_Versuch
 
 pair = [Record("A",seq), Record("B",ref)] #Variables seq and ref are sequences in BioAlignment_Versuch
-aln = readDNAAlignment(pair)
+aln = readPairwiseAlignment(pair)
 
 #Compare aligned sequences in ReadAlignment and in BioAlignment_Versuch
 aligned_seqs = aln.aln_pair

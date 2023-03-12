@@ -1,14 +1,8 @@
 #export check_DNA; readDNAAlignment
 using Pkg
 Pkg.add("BioAlignments")
-using .DataReader, BioAlignments
-
-#-------------------
-#=AlignmentRecord
-struct AlignmentRecord
-    description::String
-    aln_seq::String
-end=#
+using BioAlignments
+include("DataReader.jl")
 
 #--------------
 #ReadAlignment

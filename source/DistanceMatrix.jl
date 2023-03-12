@@ -32,7 +32,7 @@ function createDictionary(records::Vector{Record})
     end
 
     #convert Char[] to String[]
-    leaf_names = [string(x) for x in name]
+    leaf_names = [string(x) for x in names]
 
     return (leaf_names = leaf_names,dict_records = Dict(zip(leaf_names,records)))
 end
