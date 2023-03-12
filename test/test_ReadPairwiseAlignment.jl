@@ -1,5 +1,5 @@
 include("../BioAlignment_Versuch.jl")
-include("../ReadAlignment.jl")
+include("../ReadPairwiseAlignment.jl")
 using Test
 
 #--------------
