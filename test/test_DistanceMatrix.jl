@@ -1,4 +1,4 @@
-include("../DistanceMatrix.jl")
+include("../source/DistanceMatrix.jl")
 using Test
 
 s1 = Record("Seq1","TCAGGATGAAC")

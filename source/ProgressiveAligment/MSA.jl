@@ -5,8 +5,6 @@ using BioAlignments
 Pkg.add("BioSymbols")
 using BioSymbols
 
-using Test
-
 #-----
 #Data
 EDNAFULL

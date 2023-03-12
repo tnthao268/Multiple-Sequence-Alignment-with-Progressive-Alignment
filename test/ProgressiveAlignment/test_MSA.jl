@@ -1,4 +1,4 @@
-include("../ProgressiveAligment/MSA.jl")
+include("../../source/ProgressiveAligment/MSA.jl")
 using Test
 
 #Test getPairScore

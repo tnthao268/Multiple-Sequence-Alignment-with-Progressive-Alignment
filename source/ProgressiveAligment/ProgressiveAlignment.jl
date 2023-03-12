@@ -53,6 +53,7 @@ function progressiveAlignment(guildtree::Vector{Vector{String}}, dict_records::D
     dict_records
 end
 
+#Example
 s1 = Record("Seq1","TCAGGATGAAC")
 s2 = Record("Seq2","ATCACGATGAACC")
 s3 = Record("Seq3","ATCAGGAATGAATCC")
