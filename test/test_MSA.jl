@@ -40,13 +40,13 @@ seq3 ACT-C
 =#
 
 #result after alignment
-aln_seqs1
+msa.aln_seqs1
 #=
 2-element Vector{Record}:
  Record("seq1", "AA-GC")
  Record("seq2", "AATGC")
  =#
- aln_seqs2
+ msa.aln_seqs2
  #=
  1-element Vector{Record}:
  Record("seq3", "ACT-C")
