@@ -21,12 +21,11 @@ end
 #=  create a Dictionary: Each key is a letter in alphabet and its value is a Record.
     The list of keys in Dictionary is used for Leaf Names in Guild Tree
     parameter list of Records
-    return a Dictionary
+    return a Dictionary of Records and a list of Leaf Names
 =#
 function createDictionary(records::Vector{Record})
     #define a leaf names (as key of Dictionary)
     names = Array{Char}(undef,length(records))
-
     names[1] = 'A'
     for x in 2:length(names)
         names[x] = names[x-1] + 1
@@ -35,5 +34,5 @@ function createDictionary(records::Vector{Record})
     #convert Char[] to String[]
     leaf_names = [string(x) for x in name]
 
-    return Dict(zip(leaf_names,records))
+    return (leaf_names = leaf_names,dict_records = Dict(zip(leaf_names,records)))
 end

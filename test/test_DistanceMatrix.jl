@@ -21,5 +21,7 @@ dm = createDistanceMatrix(records)
 
 #test createDictionary
 test_leaf_names = ["A","B","C","D","E"]
-test_dict = Dict(zip(test_leaf_names,records))
-@test createDictionary(records) == test_dict
+test_dict_records = Dict(zip(test_leaf_names,records))
+dict = createDictionary(records)
+@test dict.dict_records == test_dict
+@test dict.leaf_names == test_leaf_names
