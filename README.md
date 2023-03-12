@@ -3,7 +3,7 @@ This projects contains multiple sequence alignments tool written in Julia langua
 
 It builds phylogenetic tree from sequences with UPGMA algorithm, then align these sequences according to the tree
 
-Usage examples are in "example" folder, tests are in "test" folder
+Usage examples are in ```example``` folder, tests are in ```test``` folder
 
 ## Source code files and guideline to their usages
 
@@ -61,4 +61,17 @@ Call **writeSequences** method with output file name ("try_seq1.txt") and dictio
 dict_seq = Dict("A" => record, "B" => record2) 
 writeSequences("try_seq1.txt", dict_seq) 
 ```
+
+## Library
+
+BioAlignment [GitHub](https://github.com/BioJulia/BioAlignments.jl.git)
+
+FastaIO [Link](https://docs.juliahub.com/FastaIO/i12XQ/1.0.0/)
+
+MCPhyloTree [GitHub](https://github.com/erathorn/MCPhyloTree.jl.git)
+
+## Language
+
+Julia Version 1.8.2 [Link](https://julialang.org/downloads/)
+
 
