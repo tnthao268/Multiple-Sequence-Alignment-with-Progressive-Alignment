@@ -4,13 +4,13 @@ include("ReadPairwiseAlignment.jl")
 #=  create a distance matrix from scores of pairwise alignments of sequences
     return distance matrix
 =#
-function createDistanceMatrix(seqs::Vector{Record})
-    len = length(seqs)
+function createDistanceMatrix(records::Vector{Record})
+    len = length(records)
     
     dm = zeros(len,len) #create a matrix with number of sequences
     for i in 1:len
         for j in i+1:len
-            pair = [seqs[i],seqs[j]]
+            pair = [records[i],records[j]]
             aln = readPairwiseAlignment(pair)
             dm[i,j] = dm[j,i] = aln.score
         end
