@@ -54,7 +54,7 @@ function writeSequences(output_file_name::String,dict_seq::Dict{String,Record})
     
 
     for sequence in values(sequences_dict)
-        x = length(split_sequence(sequence,50)) # split sequence into substring of length 50
+        x = length(split_sequence(sequence,50)) # split sequence into substrings of length 50, x is length of the list of substrings
     
     
         for i in 1:x
