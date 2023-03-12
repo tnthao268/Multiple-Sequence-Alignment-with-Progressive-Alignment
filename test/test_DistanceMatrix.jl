@@ -8,6 +8,7 @@ s4 = Record("Seq4","TCACGATTGAATCGC")
 s5 = Record("Seq5","TCAGGAATGAATCGC")
 records = [s1,s2,s3,s4,s5]
 
+#test createDistanceMatrix
 distanceMatrix = [  0 34 36 32 41;
                     34 0 44 36 27;
                     36 44 0 40 58;
@@ -18,3 +19,7 @@ dm = createDistanceMatrix(records)
 
 @test dm == convert(Matrix{Float64},distanceMatrix)
 
+#test createDictionary
+test_leaf_names = ["A","B","C","D","E"]
+test_dict = Dict(zip(test_leaf_names,records))
+@test createDictionary(records) == test_dict
