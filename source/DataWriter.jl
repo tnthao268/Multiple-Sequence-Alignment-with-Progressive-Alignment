@@ -23,7 +23,8 @@ end
 # function to write with n line distances- with n sequences n+1 times \n 
 # function line_distance()
 
-# function to split sequences into chunks with 50 characters each
+# function to split sequences into chunks with char_each_line characters each
+# result of this function is a list of substrings from a sequence
 function split_sequence(str::String,char_each_line::Integer)
     substr = String[]
     for x in 1:char_each_line:length(str)
@@ -38,40 +39,45 @@ end
 
 
 # function to write aligned sequences into a text file, 
-# with parameter: output file's name and dictionary with key: alphabets, values: record
-function writeSequences(output_file_name::String,dict_seq::Dict{String,Record})
+# with parameter as: output file's name and dictionary with key as alphabets, values as record
+function writeSequences(output_file_name::String,dict_seq::Dict{String,Record},num_char_each_line::Integer)
     output_file = open(output_file_name, "w")
     sequences_dict = Dict() # new dict to store all aligned sequences, with key: description, value:sequence
 
     for val in values(dict_seq)
         sequence = val.sequence
         description = val.description
-         # add sequence of each record to the sequences dictionary
+         # add sequence of each record to the sequences_dict dictionary
         merge!(sequences_dict,Dict(description => sequence))
 
     end
+    
+    x = 1 # x is the number of lines that each sequence will be printed out
 
     
-
     for sequence in values(sequences_dict)
-        x = length(split_sequence(sequence,50)) # split sequence into substrings of length 50, x is length of the list of substrings
-    
-    
-        for i in 1:x
-
-            for (description,sequence) in sequences_dict
-       
-                # write description right-justified in the beginning (write only "NM..." part of description)
-                # and sequence with maximal length of 50 next to it in each line
-                write(output_file,rpad(split(description," ")[1],length(key_max(sequences_dict))) * " " * split_sequence(sequence,50)[i] ) 
-                write(output_file,"\n")
-            
-            end
-        write(output_file,"\n")
-
-
+        j = length(split_sequence(sequence,num_char_each_line)) 
+        if j > x
+            x = j # x: greatest number of lines that sequences need to be printed out
         end
     end
+
+    
+    for i in 1:x 
+
+        for (description,sequence) in sequences_dict
+       
+                # write description right-justified in the beginning (write only "NM..." part of description)
+                # and sequence with maximal length (num_char_each_line) next to it in each line
+                write(output_file,rpad(split(description," ")[1],length(key_max(sequences_dict))) * " " * split_sequence(sequence,num_char_each_line)[i] ) 
+                write(output_file,"\n")
+            
+        end
+    write(output_file,"\n")
+
+
+    end
+    
     close(output_file)
     # return sequences_dict
     # println(length(values(sequences_dict)))
