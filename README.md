@@ -3,7 +3,7 @@ This projects contains multiple sequence alignments tool written in Julia langua
 
 It builds phylogenetic tree from sequences with UPGMA algorithm, then align these sequences according to the tree
 
-Usage examples are in ```Project_example``` file, tests are in ```test``` folder
+Usage examples are in ```Project_Example``` file, tests are in ```test``` folder
 
 ## Source code files and guideline to their usages
 
