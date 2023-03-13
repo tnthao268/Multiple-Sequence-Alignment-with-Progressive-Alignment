@@ -11,8 +11,9 @@ str = split_sequence(fasta_record.sequence,2)
 
 record  = Record("NM_001103547.4 Drosophila melanogaster Cyclic-AMP response", "ACGTATGCTCGTAGCTGACGTAGCTGACGTAGCTGACGTAGCTGACGACG")
 record2 = Record("NM_001103547.5 Drosophila melanogaster Cyclic-AMP response", "ACGTATGCTCGTAGGTGACGTAGCTGACGTAGCTGACGTAGCTGACGACG")
+record3 = Record("NM_001103547.6 Drosophila melanogaster Cyclic-AMP response", "CGATAAGCTCGTAGGGGACGTAGCTGACGTAGCTGACGTAGCTGACGACG")
 
-dict_seq = Dict("A" => record, "B" => record2)
+dict_seq = Dict("A" => record, "B" => record2, "C" => record3)
 
-writeSequences("try_seq1.txt",dict_seq)
+writeSequences("try_seq1.txt",dict_seq,6)
 
