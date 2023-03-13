@@ -20,7 +20,11 @@ end
 createGroup([["A","B"],"C"])
 createGroup("A")
 
-#progressiveAlignment
+#=  Progressive Alignment
+    parameter guild is a the order of alignment
+              dict_records is a dictionary with records as values and their pseudo names as keys
+    return result of progressive alignment
+=#
 function progressiveAlignment1(guild, dict_records::Dict{String,Record})
     #check, if each pair has 2 indexes
     @assert length(guild) == 2 "$guild is not a pair"
@@ -80,4 +84,11 @@ end
 
 #Using
 align1(guildTree[4], dict_records)
-    
+#=
+Dict{String, Record} with 5 entries:
+  "B" => Record("Seq2", "ATCACGA-TGAA-C-C")
+  "A" => Record("Seq1", "-TCAGGAT-GAA---C")
+  "C" => Record("Seq3", "ATCAGGAATGAATC-C")
+  "D" => Record("Seq4", "-TCACGATTGAATCGC")
+  "E" => Record("Seq5", "-TCAGGAATGAATCGC")
+=#
