@@ -6,6 +6,8 @@ include("../test/test_DistanceMatrix.jl")
 records
 dict_records = createDictionary(records).dict_records
 
+export upgma, guildTreeInstruction
+
 #Cluster::GeneralNode
 cluster = upgma(dm,test_leaf_names)
 
