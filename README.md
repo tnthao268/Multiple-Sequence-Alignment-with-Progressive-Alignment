@@ -86,7 +86,7 @@ The result returns a dictionary of Records, which contain all aligned sequences.
 
 The aligned sequences are written in a text file format 
 
-Call **writeSequences** method with output file name ("try_seq1.txt") and dictionary containing representation string of the records (dict_seq). 50 in the below example is number of characters from the sequence is printed on each line. 
+Call **writeSequences** method with output file name ("try_seq1.txt") and dictionary containing representation string of the records (dict_seq). *50* in the below example is the sequence's number of characters printed on each line. 
 
 ```
 dict_seq = Dict("A" => record, "B" => record2) 
