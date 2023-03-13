@@ -46,7 +46,7 @@ dict = createDictionary(records_sequences)
 
 ```
 
-**dict** is a NamedTuple, which has **dict_records** and **leave_names**. **leave_names** is a list of letters in the alphabet. Each letter presents a **Record** from **records_sequences**. And they are described as keys and values of the dictionary **dict_records**. 
+**dict** is a NamedTuple, which has **dict_records** and **leaf_names**. **leaf_names** is a list of letters in the alphabet. Each letter presents a **Record** from **records_sequences**. **leaf_names** and **records_sequences** are described as keys and values of the dictionary **dict_records**. 
 
 ```
 
