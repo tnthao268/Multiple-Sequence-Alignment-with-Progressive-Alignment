@@ -39,7 +39,7 @@ end
 
 # function to write aligned sequences into a text file, 
 # with parameter: output file's name and dictionary with key: alphabets, values: record
-function writeSequences(output_file_name::String,dict_seq::Dict{String,Record})
+function writeSequences(output_file_name::String,dict_seq::Dict{String,Record},num_char_each_line::Integer)
     output_file = open(output_file_name, "w")
     sequences_dict = Dict() # new dict to store all aligned sequences, with key: description, value:sequence
 
@@ -50,28 +50,31 @@ function writeSequences(output_file_name::String,dict_seq::Dict{String,Record})
         merge!(sequences_dict,Dict(description => sequence))
 
     end
-
     
-
+    x = 1
+    
     for sequence in values(sequences_dict)
-        x = length(split_sequence(sequence,50)) # split sequence into substrings of length 50, x is length of the list of substrings
-    
-    
-        for i in 1:x
+        if length(split_sequence(sequence,num_char_each_line)) > x
+            x = length(split_sequence(sequence,num_char_each_line))
+        end
+    end
 
-            for (description,sequence) in sequences_dict
+    
+    for i in 1:x
+
+        for (description,sequence) in sequences_dict
        
                 # write description right-justified in the beginning (write only "NM..." part of description)
                 # and sequence with maximal length of 50 next to it in each line
-                write(output_file,rpad(split(description," ")[1],length(key_max(sequences_dict))) * " " * split_sequence(sequence,50)[i] ) 
+                write(output_file,rpad(split(description," ")[1],length(key_max(sequences_dict))) * " " * split_sequence(sequence,num_char_each_line)[i] ) 
                 write(output_file,"\n")
             
-            end
-        write(output_file,"\n")
-
-
         end
+    write(output_file,"\n")
+
+
     end
+    
     close(output_file)
     # return sequences_dict
     # println(length(values(sequences_dict)))
