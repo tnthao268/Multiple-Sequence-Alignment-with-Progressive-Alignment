@@ -9,7 +9,7 @@ Usage examples are in ```Project_Example``` file, tests are in ```test``` folder
 
 1. **Data Reader** 
 
-To read data from Fasta files and save the information into Record datatype 
+To read data from Fasta files and save the sequence's information (description, sequence)  into Record datatype 
 
 Call **readSequences_file** method to read many fasta files. **input_files_names** is a list of names from all fasta files: 
 
@@ -36,17 +36,17 @@ sequence = readSequences(dirname(@__FILE__()) * "/..data/sequence.fasta")
 
 2. **Distance Matrix and Dictionary** 
 
-Use **records_sequences** as parameter to create a **Distance Matrix** and a **Dictionary**. 
+Use **records_sequences** as a parameter to create a **Distance Matrix** and a **Dictionary**. 
 
 
 ```
-distanceMatrix = createDistanceMatrix(records) 
+distanceMatrix = createDistanceMatrix(records_sequences) 
 
-dict = createDictionary(records) 
+dict = createDictionary(records_sequences) 
 
 ```
 
-**dict** is a NamedTuple, which has **dict_records** and **leave_names**. **leave_names** is a list of letters in the alphabet. Each letter presents a **Record** from **records_sequences**. And they are described as keys and values of dictionary **dict_records**. 
+**dict** is a NamedTuple, which has **dict_records** and **leave_names**. **leave_names** is a list of letters in the alphabet. Each letter presents a **Record** from **records_sequences**. And they are described as keys and values of the dictionary **dict_records**. 
 
 ```
 
@@ -59,13 +59,13 @@ leaf_names = dict.leaf_names
 
 Here **UPGMA** is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
 
-Call **split_name_sequences** method to return list of clusters that need to be aligned: 
+Call **guildTreeInstruction** method to return list of clusters that need to be aligned: 
 
 ```
-guildTree_instruction = split_name_sequences(cluster_list(change_cluster_name(tree))) 
+guildTree_instruction = guildTreeInstruction(tree)
 ```
 
-**tree** is the created tree from UPGMA algorithm, using distance matrix and list of names. 
+**tree** is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
 
 ```
 tree = upgma(distanceMatrix,leaf_names)
