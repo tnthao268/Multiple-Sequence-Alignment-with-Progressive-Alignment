@@ -1,18 +1,53 @@
 include("../ReadPairwiseAlignment.jl")
 include("MSA.jl")
 
+#=  convert each group in pair in String to simplify the guildTreeInstruction
+    for example: complex pair [["A","B"],"C"] => simple pair ["AB","C"]
+=#
+function createGroup(vector)
+    group = ""
+    function readGroup(each)
+        if typeof(each) == String
+            group *= each
+        else
+            for x in each
+                readGroup(x)
+            end
+        end
+    end
+    readGroup(vector)
+    group
+end
+
+#Examples
+createGroup([["A","B"],"C"])
+createGroup("A")
+
+function simpleGuildTree(guildTree)
+    simple = []
+    for pair in guildTree
+        simple_pair = [createGroup(each) for each in pair]
+        push!(simple,simple_pair)
+    end
+    simple
+end
+
+#Example
+guildTree = [["A", "D"], [["A", "D"], "C"], ["B", "E"],[[["A", "D"], "C"], ["B", "E"]]] #copy frome UPGMA2
+simple = simpleGuildTree(guildTree)
+
 #=  Progressive Alignment
     parameter guildtree is a the order of alignment
               dict_records is a dictionary with records as values and their pseudo names as keys
     return result of progressive alignment
 =#
-function progressiveAlignment(guildtree::Vector{Vector{String}}, dict_records::Dict{String,Record})
+function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record})
     #check, if each pair has 2 indexes
-    for guild in guildtree
+    for guild in simpleguildtree
         @assert length(guild) == 2 "$guild is not a pair"
     end
 
-    for guild in guildtree
+    for guild in simpleguildtree
 
         #when the guild is pairwise alignment (for example guild = ["A","B"])
         if length(guild[1]) == length(guild[2]) == 1
@@ -61,16 +96,14 @@ s4 = Record("Seq4","TCACGATTGAATCGC")
 s5 = Record("Seq5","TCAGGAATGAATCGC")
 records = [s1,s2,s3,s4,s5] #return from DataReader
 
-include("../DistanceMatrix.jl")
-dict_records = createDictionary(records).dict_records
-dm = createDistanceMatrix(records)
+dictrecords = createDictionary(records).dict_records
 
 guildTree = [["B","E"],["A","D"],["C","AD"],["CAD","BE"]]
 guildTree2 = [["B","E"],["A","BE"],["C","D"],["CD","ABE"]]
 
-progressiveAlignment(guildTree2,dict_records)
+progressiveAlignment(simple,dictrecords)
 
-#=  Result with guildTree1
+#=  Result of progressiveAlignment(guildTree,dictrecords)
 Alignment Score: 248
 Dict{String, Record} with 5 entries:
   "B" => Record("Seq2", "ATCACGA-TGAA-C-C")
@@ -80,7 +113,7 @@ Dict{String, Record} with 5 entries:
   "E" => Record("Seq5", "-TCAGGAATGAATCGC")
 =#
 
-#= Result with guildTree2
+#=  Result of progressiveAlignment(guildTree2,dictrecords)
 Alignment Score: 266
 Dict{String, Record} with 5 entries:
   "B" => Record("Seq2", "ATCACGA-TGAA-C-C")
