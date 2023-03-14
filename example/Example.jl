@@ -32,11 +32,7 @@ simpleInstruction = simpleGuildTree(guildtree)
 
 #second: progressive alignment with a nested instruction from the guild tree
 nestedinstruction = nestedInstruction(guildtree)
-<<<<<<< HEAD
-@time new_dict_records = progressiveAlignment2(nestedinstruction,dict_records) #lasts maybe shorter, but still long
-=======
 @time new_dict_records = progressiveAlignment2(nestedinstruction, dict_records) #lasts maybe shorter, but still long
->>>>>>> 8db4c90934dd11aa3164f121e3a35fb158288127
 
 #Data Writer: Write the result of multi sequences alignment in a text file (.txt)
 
