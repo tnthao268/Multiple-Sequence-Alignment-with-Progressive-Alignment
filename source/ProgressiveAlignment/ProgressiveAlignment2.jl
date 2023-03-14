@@ -82,7 +82,7 @@ end
               dict_records is a dictionary with records as values and their pseudo names as keys
     return result of progressive alignment
 =#
-function progressiveAlignment2(nestedInstruction,dict_records::Dict{Record})
+function progressiveAlignment2(nestedInstruction,dict_records::Dict{String,Record})
     if typeof(nestedInstruction) == Vector{String}
         return dict_records #return dict_records
     end
