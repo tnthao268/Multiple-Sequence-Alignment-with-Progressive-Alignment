@@ -31,8 +31,8 @@ simpleInstruction_nj = simpleGuildTree(guildtree_nj)
 @time new_dict_records_nj = progressiveAlignment(simpleInstruction_nj,dict_records)
 
 #second: progressive alignment with a nested instruction from the guild tree
-nestedInstruction = getNestedInstruction(guildtree)
-@time new_dict_records = progressiveAlignment2(nestedInstruction) #lasts maybe shorter, but still long
+nestedinstruction = nestedInstruction(guildtree)
+@time new_dict_records = progressiveAlignment2(nestedinstruction, dict_records) #lasts maybe shorter, but still long
 
 #Data Writer: Write the result of multi sequences alignment in a text file (.txt)
 writeSequences("example.txt",new_dict_records,50)
