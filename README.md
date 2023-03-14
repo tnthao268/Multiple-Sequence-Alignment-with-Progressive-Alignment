@@ -3,7 +3,7 @@ This projects contains multiple sequence alignments tool written in Julia langua
 
 It builds phylogenetic tree from sequences with UPGMA algorithm, then align these sequences according to the tree
 
-Usage examples are in ```Project_Example``` file, tests are in ```test``` folder
+Usage examples are in ```Example.jl``` file, tests are in ```test``` folder. Result alignments from ```Example``` are in ```example.txt``` and ```example2.txt```
 
 ## Source code files and guideline to their usages
 
@@ -14,7 +14,7 @@ To read data from Fasta files and save the sequence's information (description, 
 Call ```readSequences_file``` method to read many fasta files. ```input_files_names``` is a list of names from all fasta files: 
 
 ```julia
-input_files_names = ["data/ChimpanzeeDND1.fasta","data/DogDND1.fasta","data/HomoSapienDND1.fasta","data/MouseDND1.fasta"] 
+input_files_names = ["data/macaca mulatta mir126.fasta","data/pan troglodytes mir126.fasta","data/sus scrofa mir126.fasta","data/equus caballus mir126.fasta ", "data/homo sapien mir126.fasta"] 
 
 records_sequences = readSequences_file(input_files_names) 
  ```
@@ -57,15 +57,15 @@ leaf_names = dict.leaf_names
 
 Here ```UPGMA``` is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
 
-```tree``` is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
+```cluster``` is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
 
 ```julia
-tree = upgma(distanceMatrix,leaf_names)
+cluster = upgma(distanceMatrix,leaf_names)
 ```
 Call ```guildTreeInstruction``` method to return list of clusters that need to be aligned: 
 
 ```julia
-guildTree_instruction = guildTreeInstruction(tree)
+guildTree = guildTreeInstruction(tree)
 ```
 
 ### 4. Progressive Alignment
