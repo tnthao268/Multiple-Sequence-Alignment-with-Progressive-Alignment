@@ -14,7 +14,7 @@ To read data from Fasta files and save the sequence's information (description, 
 Call ```readSequences_file``` method to read many fasta files. ```input_files_names``` is a list of names from all fasta files: 
 
 ```julia
-input_files_names = ["data/ChimpanzeeDND1.fasta","data/DogDND1.fasta","data/HomoSapienDND1.fasta","data/MouseDND1.fasta"] 
+input_files_names = ["data/macaca mulatta mir126.fasta","data/pan troglodytes mir126.fasta","data/sus scrofa mir126.fasta","data/equus caballus mir126.fasta ", "data/homo sapien mir126.fasta"] 
 
 records_sequences = readSequences_file(input_files_names) 
  ```
