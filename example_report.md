@@ -12,7 +12,7 @@ Progressive alignment using this tool has been conducted with five mir126 sequen
 
 ```sus scrofa mir126.fasta``` [Link](https://www.ncbi.nlm.nih.gov/nucleotide/NR_038594.1?report=genbank&log$=nucltop&blast_rank=71&RID=10V9NF6N016)
 
-and produce the alignment result ```example.txt```
+and producd the alignment result ```example.txt```
 
 
 ## Discussion
