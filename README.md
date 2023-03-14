@@ -70,7 +70,7 @@ guildTree = guildTreeInstruction(tree)
 
 ### 4. Progressive Alignment
 
-```guildTree_instruction``` shows pairs, which will be aligned, in order. A pair can be made up of 2 sequences (pairwise alignment) or combination of alignment and sequence (multiple sequence alignment)
+```guildTree_instruction``` shows pairs, which will be aligned, in order. A pair can be made up of 2 sequences (pairwise alignment) or a combination of alignment and sequence (multiple sequence alignment).
 
 To run the Progressive Alignment use ```simpleGuildTree``` to simplify the ```guildTree_instruction```, then call ```progressiveAlignment```:
 
