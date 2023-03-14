@@ -1,3 +1,7 @@
+include("../ReadPairwiseAlignment.jl")
+include("MSA.jl")
+
+#----------------------------------
 #=  convert each group in pair in String to simplify the guildTreeInstruction
     for example: complex pair [["A","B"],"C"] => simple pair ["AB","C"]
 =#
@@ -16,26 +20,32 @@ function createGroup(vector)
     group
 end
 
-#Examples
-createGroup([["A","B"],"C"])
-createGroup("A")
+#--------------------------------
+# get nested instruction, which is the last 'pair' of the guild tree instruction 
+function nestedInstruction(guildtree)
+    guildtree[length(guildtree)]
+end
 
-#=  Progressive Alignment
-    parameter guild is a the order of alignment
+#------------------------------------------
+#Progressive Alignment
+#=  Progressive Alignment: Alignment a pair 
+    parameter pair is a pair of alignment in the guild tree instruction
               dict_records is a dictionary with records as values and their pseudo names as keys
     return result of progressive alignment
 =#
-function progressiveAlignment1(guild, dict_records::Dict{String,Record})
+function progressiveAlignmentAPair(pair, dict_records::Dict{String,Record})
+
+    println(pair)
     #check, if each pair has 2 indexes
-    @assert length(guild) == 2 "$guild is not a pair"
+    @assert length(pair) == 2 "$pair is not a pair"
 
     #when the guild is pairwise alignment (for example guild = ["A","B"])
-    if length(guild[1]) == length(guild[2]) == 1
+    if length(pair[1]) == length(pair[2]) == 1
         #pairwise alignment
-        aln = readPairwiseAlignment([dict_records[x] for x in guild])
+        aln = readPairwiseAlignment([dict_records[x] for x in pair])
         
         #dictionary of pair of sequences, which will be aligned
-        dict_aln = Dict(zip(guild,aln.aln_pair))
+        dict_aln = Dict(zip(pair,aln.aln_pair))
         
         #update the dictionary dict_records new aligned sequences
         merge!(dict_records,dict_aln)
@@ -44,8 +54,8 @@ function progressiveAlignment1(guild, dict_records::Dict{String,Record})
     #when the guild is multi sequences alignment (for example guild = ["AB","C"]) 
     else
         #Preapare 2 groups of keys of sequences for alignment (for example from guild[1] = "AB", we have g1 = ["A","B"])
-        g1 = [string(x) for x in guild[1]]
-        g2 = [string(y) for y in guild[2]]
+        g1 = [string(x) for x in pair[1]]
+        g2 = [string(y) for y in pair[2]]
 
         #two lists of Records: parameter for msa_globalAlignment methode
         aln_seqs1 = [dict_records[x] for x in g1]
@@ -67,28 +77,21 @@ function progressiveAlignment1(guild, dict_records::Dict{String,Record})
     dict_records
 end
 
-# Multi Sequences Alignment
-function align1(guildTree,dict_records)
-    if typeof(guildTree) == Vector{String}
+#=  Progressive Alignment all sequences by reading the nested instruction of guild tree
+    parameter nestedInstruction
+              dict_records is a dictionary with records as values and their pseudo names as keys
+    return result of progressive alignment
+=#
+function progressiveAlignment2(nestedInstruction,dict_records::Dict{Record})
+    if typeof(nestedInstruction) == Vector{String}
         return dict_records #return dict_records
     end
-
-    for x in guildTree
+    
+    for x in nestedInstruction
         println(x)
         if length(x) > 1
-            progressiveAlignment1([createGroup(y) for y in x],align1(x,dict_records))
+            progressiveAlignmentAPair([createGroup(y) for y in x],progressiveAlignment2(x,dict_records))
         end
     end
     dict_records
 end
-
-#Using
-align1(guildTree[4], dict_records)
-#=
-Dict{String, Record} with 5 entries:
-  "B" => Record("Seq2", "ATCACGA-TGAA-C-C")
-  "A" => Record("Seq1", "-TCAGGAT-GAA---C")
-  "C" => Record("Seq3", "ATCAGGAATGAATC-C")
-  "D" => Record("Seq4", "-TCACGATTGAATCGC")
-  "E" => Record("Seq5", "-TCAGGAATGAATCGC")
-=#
