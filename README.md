@@ -70,22 +70,16 @@ guildTree = guildTreeInstruction(tree)
 
 ### 4. Progressive Alignment
 
-```guildTree_instruction``` shows pairs, which will be aligned, in order. A pair can be 2 sequences (pairwise alignment), or sequence-alignment or 2 alignments (multi sequences alignment).  
+```guildTree_instruction``` shows pairs, which will be aligned, in order. A pair can be made up of 2 sequences (pairwise alignment) or combination of alignment and sequence (multiple sequence alignment)
 
-There are 2 ways to run the Progressive Alignment:
+To run the Progressive Alignment use ```simpleGuildTree``` to simplify the ```guildTree_instruction```, then call ```progressiveAlignment```:
 
-First way is using ```simpleGuildTree``` to simplify the ```guildTree_instruction```, then call ```progressiveAlignment```:
 ```julia
 simpleinstruction = simpleGuildTree(guildTree_instruction)
 result = progressiveAlignment(simpleinstruction, dict_records) 
 ```
-Second one is using ```nestedInstruction``` to get the nested instruction from ```guildTree_instruction```. Then run ```progressiveAlignment2```:
-```julia
-nestedinstruction = nestedInstruction(guildTree_instruction)
-result = progressiveAlignment2(nestedinstruction, dict_records)
-```
 
-Both ```result```s return a dictionary of Records, which contain all aligned sequences.
+```result``` return a dictionary of Records, which contain all aligned sequences.
 
 ### 5. DataWriter
 
