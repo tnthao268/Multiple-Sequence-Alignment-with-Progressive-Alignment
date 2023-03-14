@@ -6,7 +6,7 @@ using BioAlignments
 #-----
 #Data
 EDNAFULL
-gap_open = -20
+gap_open = -16
 gap_extend = -1
 #---------------------------
 #=  get pair score of second characters of 2 String parameters
@@ -14,7 +14,7 @@ gap_extend = -1
               gap_open penalty and gap_extend penalty
     return pair score
 =#
-function getPairScore(n1::String,n2::String,gap_open=-20,gap_extend=-1)
+function getPairScore(n1::String,n2::String,gap_open=-16,gap_extend=-1)
     @assert length(n1) == length(n2) == 2
     c1 = n1[2]; c2 = n2[2]
     if '-' in [c1,c2]
@@ -113,7 +113,7 @@ end
     parameter two lists of Records. These lists contain groups of sequences, which are read from Guild Tree for Progressive Alignment
     return Traceback Matrix
 =#
-function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -20)
+function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -16)
     #check, if 2 lists of Records has minimal 1 Records
     @assert (length(aln_seqs1) >= 1 && length(aln_seqs2) >= 2) ||
             (length(aln_seqs2) >= 1 && length(aln_seqs1) >= 2)

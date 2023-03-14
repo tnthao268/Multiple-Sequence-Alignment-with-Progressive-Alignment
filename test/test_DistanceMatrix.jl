@@ -9,11 +9,11 @@ s5 = Record("Seq5","TCAGGAATGAATCGC")
 records = [s1,s2,s3,s4,s5]
 
 #test createDistanceMatrix
-distanceMatrix = [  0.0    4.0  -9.0    4.0   11.0
-                    4.0    0.0  14.0  -11.0  -20.0
-                    -9.0   14.0   0.0   10.0   28.0
-                    4.0  -11.0  10.0    0.0   57.0
-                    11.0  -20.0  28.0   57.0    0.0]
+distanceMatrix = [0.0   12.0   3.0  10.0   19.0
+                    12.0   0.0  22.0  -1.0  -10.0
+                    3.0   22.0   0.0  18.0   36.0
+                    10.0  -1.0  18.0   0.0   57.0
+                    19.0  -10.0  36.0  57.0    0.0]
 
 dm = createDistanceMatrix(records)
 
