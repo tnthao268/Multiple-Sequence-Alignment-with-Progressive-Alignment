@@ -19,7 +19,7 @@ and produced the alignment result ```example.txt```
 
 Comparing the produced result to ClustalW alignment result ```data/mega_clustalw.fas``` (using MEGA version 11) [MEGA download link](https://www.megasoftware.net/]),  it can be seen that ClustalW is more effective in reducing the open of gaps, which has more biological meaning. 
 
-This can be due to the use of UPGMA algorithm in the project for creating a tree for clustering . UPGMA despites its simplicity in using, assumes a constant substitution rate, over time and phylogenetic lineages [[1]](#1), and has therefore not been very relevant in biological context.
+This can be due to the use of UPGMA algorithm in the project for creating a tree for clustering . Despites its simplicity in using, UPGMA assumes a constant substitution rate, over time and phylogenetic lineages [[1]](#1), and has therefore not been very relevant in biological context.
 
 
 
