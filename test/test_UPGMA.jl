@@ -10,5 +10,5 @@ leaf_names = dict.leaf_names
 
 cluster = upgma(dm,leaf_names)
 guildTree = guildTreeInstruction(cluster)
-test_guildTree = [["A", "D"], [["A", "D"], "C"], ["B", "E"],[[["A", "D"], "C"], ["B", "E"]]]
+test_guildTree = [["A", "C"], [["A", "C"], "D"], ["B", "E"],[[["A", "C"], "D"], ["B", "E"]]]
 @test guildTree == test_guildTree
