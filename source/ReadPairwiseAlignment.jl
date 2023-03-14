@@ -34,7 +34,7 @@ function readPairwiseAlignment(pair::Vector{Record})
     end
 
     #pairwise alignment
-    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -5, gap_extend = -1)
+    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -20, gap_extend = -1)
     res = pairalign(GlobalAlignment(),pair[1].sequence,pair[2].sequence,scoremodel)
     aln = alignment(res)
 

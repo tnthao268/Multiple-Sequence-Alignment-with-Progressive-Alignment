@@ -1,4 +1,4 @@
-include("../../source/ProgressiveAligment/MSA.jl")
+include("../../source/ProgressiveAlignment/MSA.jl")
 using Test
 
 #Test getPairScore
@@ -22,7 +22,7 @@ sop = getSoP_at_a_pos(seqs1,seqs2,1,1)
 test_sop = (-4 + gap_open)*2 + gap_open + 0
 @test sop == test_sop
 sop2 = getSoP_at_a_pos(seqs1,seqs2,2,2)
-test_sop2 = -4*3 + -5 + -1*2
+test_sop2 = -4*3 + gap_open + gap_extend*2
 @test sop2 == test_sop2
 
 #Test setTraceback

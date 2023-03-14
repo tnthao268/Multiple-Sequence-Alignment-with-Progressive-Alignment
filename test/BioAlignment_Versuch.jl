@@ -16,7 +16,7 @@ end
 seq = "CCTAGGAGGG"
 ref = "ACCTGGTATGATAGCG"
 
-scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -5, gap_extend = -1)
+scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -20, gap_extend = -1)
 res = pairalign(GlobalAlignment(),check_dna(seq),check_dna(ref), scoremodel)
 
 s = score(res)

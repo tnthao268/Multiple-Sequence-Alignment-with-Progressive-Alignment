@@ -9,15 +9,15 @@ s5 = Record("Seq5","TCAGGAATGAATCGC")
 records = [s1,s2,s3,s4,s5]
 
 #test createDistanceMatrix
-distanceMatrix = [  0 34 36 32 41;
-                    34 0 44 36 27;
-                    36 44 0 40 58;
-                    32 36 40 0 57;
-                    41 27 58 57 0]
+distanceMatrix = [  0.0    4.0  -9.0    4.0   11.0
+                    4.0    0.0  14.0  -11.0  -20.0
+                    -9.0   14.0   0.0   10.0   28.0
+                    4.0  -11.0  10.0    0.0   57.0
+                    11.0  -20.0  28.0   57.0    0.0]
 
 dm = createDistanceMatrix(records)
 
-@test dm == convert(Matrix{Float64},distanceMatrix)
+@test dm == distanceMatrix
 
 #test createDictionary
 test_leaf_names = ["A","B","C","D","E"]
