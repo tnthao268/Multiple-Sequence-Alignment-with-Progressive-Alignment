@@ -15,5 +15,5 @@ record3 = Record("NM_001103547.6 Drosophila melanogaster Cyclic-AMP response", "
 
 dict_seq = Dict("A" => record, "B" => record2, "C" => record3)
 
-writeSequences("try_seq1.txt",dict_seq,6)
+writeSequences("data/try_seq1.txt",dict_seq,6)
 
