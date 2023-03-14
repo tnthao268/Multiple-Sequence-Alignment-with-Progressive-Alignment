@@ -59,38 +59,43 @@ leaf_names = dict.leaf_names
 
 Here **UPGMA** is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
 
+**tree** is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
+
+```
+tree = upgma(distanceMatrix,leaf_names)
+```
 Call **guildTreeInstruction** method to return list of clusters that need to be aligned: 
 
 ```
 guildTree_instruction = guildTreeInstruction(tree)
 ```
 
-**tree** is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
-
-```
-tree = upgma(distanceMatrix,leaf_names)
-```
 4. **Progressive Alignment**
 
 **guildTree_instruction** shows pairs, which will be aligned, in order. A pair can be 2 sequences (pairwise alignment), or sequence-alignment or 2 alignments (multi sequences alignment).  
 
-To run the Progressive Alignment call the method: 
-```
+There are 2 ways to run the Progressive Alignment:
 
-result = progressiveAlignment(guildTree_instruction, dict_records) 
+First way is using **simpleGuildTree** to simplify the **guildTree_instruction**, then call **progressiveAlignment**:
 ```
+simpleinstruction = simpleGuildTree(guildTree_instruction)
+result = progressiveAlignment(simpleinstruction, dict_records) 
+```
+Second one is using **nestedInstruction** to get the nested instruction from **guildTree_instruction**. Then run **progressiveAlignment2**:
+```
+nestedinstruction = nestedInstruction(guildTree_instruction)
+result = progressiveAlignment2(nestedinstruction, dict_records)
 
-The result returns a dictionary of Records, which contain all aligned sequences. 
+Both result return a dictionary of Records, which contain all aligned sequences.
 
 5. **DataWriter**
 
 The aligned sequences are written in a text file format 
 
-Call **writeSequences** method with output file name ("try_seq1.txt") and dictionary containing representation string of the records (dict_seq). *50* in the below example is the sequence's number of characters printed on each line. 
+Call **writeSequences** method with output file name ("filename.txt") and dictionary containing representation string of the records (**result**). *50* in the below example is the sequence's number of characters printed on each line.
 
-```
-dict_seq = Dict("A" => record, "B" => record2) 
-writeSequences("try_seq1.txt", dict_seq,50) 
+``` 
+writeSequences("filename.txt", result,50) 
 ```
 
 ## Library
