@@ -1,16 +1,16 @@
 # Multiple-Sequence-Alignment with Progressive-Alignment
-This projects contains multiple sequence alignments tool written in Julia language using Progressive Alignment 
+This projects contains multiple sequence alignments tool written in Julia language using Progressive Alignment.
 
-It builds phylogenetic tree from sequences with UPGMA algorithm, then align these sequences according to the tree
+It builds a phylogenetic tree from sequences with UPGMA algorithm, then aligns these sequences according to the tree.
 
-Usage examples are in ```example``` folder. ```Example.jl``` executes all functions to run multiple alignment , result alignment is in ```example.txt```. 
+Usage examples are in ```example``` folder. ```Example.jl``` executes all files to run a multiple alignment , result alignment is in ```example.txt```. 
 Tests of source code are in ```test``` folder. 
 
 ## Source code files and guideline to their usages
 
 ### 1. Data Reader
 
-To read data from Fasta files and save the sequence's information (description, sequence)  into Record datatype 
+Reads data from Fasta files and saves the sequence's information (description, sequence)  into Record datatype.
 
 Call ```readSequences_file``` method to read many fasta files. ```input_files_names``` is a list of names from all fasta files: 
 
@@ -20,7 +20,7 @@ input_files_names = ["data/macaca mulatta mir126.fasta","data/pan troglodytes mi
 records_sequences = readSequences_file(input_files_names) 
  ```
 
-```records_sequences``` in this example is a list of Record objects. Record can be also created directly from description and DNA sequence string. 
+```records_sequences``` in this example is a list of Record objects. Record can also be created directly from description and DNA sequence strings. 
 
 ```julia
 fasta_record  = Record("test string1", "ACGT") 
@@ -56,7 +56,7 @@ leaf_names = dict.leaf_names
 
 ### 3. Guild Tree (UPGMA)
 
-Here ```UPGMA``` is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
+Here ```UPGMA``` is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on clusters of sequences. Sequences which are firstly clustered are firstly aligned. 
 
 ```cluster``` is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
 
@@ -80,13 +80,13 @@ simpleinstruction = simpleGuildTree(guildTree_instruction)
 result = progressiveAlignment(simpleinstruction, dict_records) 
 ```
 
-```result``` return a dictionary of Records, which contain all aligned sequences.
+```result``` returns a dictionary of Records, which contains all aligned sequences.
 
 ### 5. DataWriter
 
 The aligned sequences are written in a text file format 
 
-Call ```writeSequences``` method with output file name ("filename.txt") and dictionary containing representation string of the records (```result```). *50* in the below example is the sequence's number of characters printed on each line.
+Call ```writeSequences``` method with output file name ("filename.txt") and a dictionary containing representative strings of the records (```result```). *50* in the below example is the sequence's number of characters printed on each line.
 
 ```
 writeSequences("filename.txt", result,50) 
