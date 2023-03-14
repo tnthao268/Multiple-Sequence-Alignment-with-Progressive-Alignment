@@ -1,7 +1,6 @@
 include("DataReader.jl")
 include("DataWriter.jl")
 include("DistanceMatrix.jl")
-include("UPGMA.jl")
 include("ProgressiveAlignment/ProgressiveAlignment.jl")
 include("UPGMA2.jl")
 include("ProgressiveAlignment/ProgressiveAlignment2.jl")    
