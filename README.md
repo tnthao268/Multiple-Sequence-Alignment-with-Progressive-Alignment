@@ -57,15 +57,15 @@ leaf_names = dict.leaf_names
 
 Here ```UPGMA``` is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
 
-```tree``` is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
+```cluster``` is the created tree from UPGMA algorithm, using distance matrix and a list of names. 
 
 ```julia
-tree = upgma(distanceMatrix,leaf_names)
+cluster = upgma(distanceMatrix,leaf_names)
 ```
 Call ```guildTreeInstruction``` method to return list of clusters that need to be aligned: 
 
 ```julia
-guildTree_instruction = guildTreeInstruction(tree)
+guildTree = guildTreeInstruction(tree)
 ```
 
 ### 4. Progressive Alignment
