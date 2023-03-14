@@ -7,7 +7,7 @@ Usage examples are in ```Project_Example``` file, tests are in ```test``` folder
 
 ## Source code files and guideline to their usages
 
-1. **Data Reader** 
+### 1. Data Reader
 
 To read data from Fasta files and save the sequence's information (description, sequence)  into Record datatype 
 
@@ -34,7 +34,7 @@ sequence = readSequences(dirname(@__FILE__()) * "/..data/sequence.fasta")
 
 ```
 
-2. **Distance Matrix and Dictionary** 
+### 2. Distance Matrix and Dictionary
 
 Use **records_sequences** as a parameter to create a **Distance Matrix** and a **Dictionary**. 
 
@@ -55,7 +55,7 @@ dict_records = dict.dict_records
 leaf_names = dict.leaf_names 
 
 ```
-3. **Guild Tree (UPGMA)**
+### 3. Guild Tree (UPGMA)
 
 Here **UPGMA** is selected as a tree-based algorithm to perform multiple alignment. With the help of this tree, alignment is performed based on cluster of sequences. Sequences which are firstly clustered are firstly aligned. 
 
@@ -70,7 +70,7 @@ Call **guildTreeInstruction** method to return list of clusters that need to be 
 guildTree_instruction = guildTreeInstruction(tree)
 ```
 
-4. **Progressive Alignment**
+### 4. Progressive Alignment
 
 **guildTree_instruction** shows pairs, which will be aligned, in order. A pair can be 2 sequences (pairwise alignment), or sequence-alignment or 2 alignments (multi sequences alignment).  
 
@@ -88,7 +88,7 @@ result = progressiveAlignment2(nestedinstruction, dict_records)
 
 Both result return a dictionary of Records, which contain all aligned sequences.
 
-5. **DataWriter**
+### 5. DataWriter
 
 The aligned sequences are written in a text file format 
 
