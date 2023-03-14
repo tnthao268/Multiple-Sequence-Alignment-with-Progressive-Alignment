@@ -1,4 +1,5 @@
 include("../test/test_DistanceMatrix.jl")
+include("../source/UPGMA2.jl")
 using Test
 
 records
