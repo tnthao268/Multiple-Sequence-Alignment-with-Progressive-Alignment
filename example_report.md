@@ -1,6 +1,6 @@
 # Report on the alignment example of micro RNA 126 (mir126) sequences 
 
-Progressive alignment using this tool has been conducted with five mir126 sequences from different species from following FASTA files:
+Progressive alignment using this tool has been conducted with five mir126 sequences from different species from following FASTA files (saved in ```data``` folder):
 
 ```equus caballus mir126.fasta``` [Link](https://www.ncbi.nlm.nih.gov/nucleotide/NR_033047.1?report=genbank&log$=nucltop&blast_rank=73&RID=10V9NF6N016)
 
@@ -12,12 +12,12 @@ Progressive alignment using this tool has been conducted with five mir126 sequen
 
 ```sus scrofa mir126.fasta``` [Link](https://www.ncbi.nlm.nih.gov/nucleotide/NR_038594.1?report=genbank&log$=nucltop&blast_rank=71&RID=10V9NF6N016)
 
-and producd the alignment result ```example.txt```
+and produced the alignment result ```example.txt```
 
 
 ## Discussion
 
-Comparing the produced result to ClustalW alignment result ```mega_clustalw.fas``` (using MEGA version 11) [MEGA](https://www.megasoftware.net/]) it can be seen that ClustalW is more effective in reducing the open of gaps, which has more biological meaning. 
+Comparing the produced result to ClustalW alignment result ```data/mega_clustalw.fas``` (using MEGA version 11) [MEGA download link](https://www.megasoftware.net/]) it can be seen that ClustalW is more effective in reducing the open of gaps, which has more biological meaning. 
 
 This can be due to the use of UPGMA algorithm in the project for creating a tree for clustering . UPGMA despites its simplicity in using, assumes a constant substitution rate, over time and phylogenetic lineages [[1]](#1), and has therefore not been very relevant in biological context.
 
