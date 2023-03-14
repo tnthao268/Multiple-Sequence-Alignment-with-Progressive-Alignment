@@ -6,7 +6,7 @@ using BioAlignments
 #-----
 #Data
 EDNAFULL
-gap_open = -5
+gap_open = -20
 gap_extend = -1
 #---------------------------
 #=  get pair score of second characters of 2 String parameters
@@ -14,7 +14,7 @@ gap_extend = -1
               gap_open penalty and gap_extend penalty
     return pair score
 =#
-function getPairScore(n1::String,n2::String,gap_open=-5,gap_extend=-1)
+function getPairScore(n1::String,n2::String,gap_open=-20,gap_extend=-1)
     @assert length(n1) == length(n2) == 2
     c1 = n1[2]; c2 = n2[2]
     if '-' in [c1,c2]
@@ -113,7 +113,7 @@ end
     parameter two lists of Records. These lists contain groups of sequences, which are read from Guild Tree for Progressive Alignment
     return Traceback Matrix
 =#
-function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -5)
+function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -20)
     #check, if 2 lists of Records has minimal 1 Records
     @assert (length(aln_seqs1) >= 1 && length(aln_seqs2) >= 2) ||
             (length(aln_seqs2) >= 1 && length(aln_seqs1) >= 2)
@@ -187,23 +187,25 @@ aln_seqs2 = Record[Record("s3","ACCGAG"), Record("s4","ACGGAG")]
 msa = msa_globalAlignment(aln_seqs1,aln_seqs2)
 #=
 scorematrix:
-[0, -20, -40, -50, -70, -90, -110, -130]
-[-20, 20, 0, -20, -40, -60, -70, -90]
-[-40, 0, 4, -16, 0, -20, -40, -60]
-[-60, -20, -16, -14, -14, 2, -18, -38]
-[-80, -40, -36, -24, -30, 6, -14, 2]
-[-100, -60, -20, -34, -40, -14, 26, 6]
-[-120, -80, -40, -38, -50, -20, 6, 46]
+[0, -80, -160, -200, -280, -360, -440, -520]
+[-80, 20, -60, -140, -216, -296, -340, -420]
+[-160, -60, 4, -76, -118, -198, -278, -356]
+[-240, -140, -76, -44, -74, -116, -196, -276]
+[-320, -220, -156, -84, -60, -54, -132, -176]
+[-400, -300, -200, -124, -100, -76, -34, -114]
+[-480, -380, -280, -164, -140, -80, -92, -14]
 traceback:
-["dia", "dia", "hor", "hor", "hor", "dia", "hor"]
-["ver", "dia", "hor", "dia", "hor", "hor", "hor"]
+["dia", "dia", "hor", "dia", "dia", "dia", "hor"]
+["ver", "dia", "hor", "hor", "hor", "hor", "dia"]
 ["ver", "dia", "dia", "dia", "dia", "hor", "dia"]
 ["ver", "dia", "ver", "dia", "dia", "dia", "dia"]
-["dia", "dia", "ver", "dia", "ver", "dia", "hor"]
-["ver", "ver", "dia", "dia", "dia", "ver", "dia"]
-Alignment Score: 46
-(Record[Record("s1", "AATCGAG"), Record("s2", "AA-CGAG")], Record[Record("s3", "AC-CGAG"), Record("s4", "AC-GGAG")])
-=# 
+["dia", "dia", "ver", "dia", "dia", "dia", "hor"]
+["ver", "ver", "ver", "dia", "dia", "dia", "dia"]
+Alignment Score: -14
+2-element Vector{Record}:
+ Record("s3", "AC-CGAG")
+ Record("s4", "AC-GGAG")
+ =# 
 msa.aln_seqs1 == aln_seqs1 # this means the variable is also updated after methode
 #true
 

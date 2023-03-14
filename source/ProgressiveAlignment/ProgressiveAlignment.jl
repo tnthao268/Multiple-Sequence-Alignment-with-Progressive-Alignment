@@ -1,6 +1,7 @@
 include("../ReadPairwiseAlignment.jl")
 include("MSA.jl")
 
+#--------------------------------------------
 #=  convert each group in pair in String to simplify the guildTreeInstruction
     for example: complex pair [["A","B"],"C"] => simple pair ["AB","C"]
 =#
@@ -19,10 +20,8 @@ function createGroup(vector)
     group
 end
 
-#Examples
-createGroup([["A","B"],"C"])
-createGroup("A")
-
+#-------------------------------------
+# simplify the guild tree instruction
 function simpleGuildTree(guildTree)
     simple = []
     for pair in guildTree
@@ -32,16 +31,16 @@ function simpleGuildTree(guildTree)
     simple
 end
 
-#Example
-guildTree = [["A", "D"], [["A", "D"], "C"], ["B", "E"],[[["A", "D"], "C"], ["B", "E"]]] #copy frome UPGMA2
-simple = simpleGuildTree(guildTree)
-
+#---------------------------
 #=  Progressive Alignment
     parameter guildtree is a the order of alignment
               dict_records is a dictionary with records as values and their pseudo names as keys
     return result of progressive alignment
 =#
+
 function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record})
+    dict = copy(dict_records)
+    
     #check, if each pair has 2 indexes
     for guild in simpleguildtree
         @assert length(guild) == 2 "$guild is not a pair"
@@ -52,13 +51,13 @@ function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record}
         #when the guild is pairwise alignment (for example guild = ["A","B"])
         if length(guild[1]) == length(guild[2]) == 1
             #pairwise alignment
-            aln = readPairwiseAlignment([dict_records[x] for x in guild])
+            aln = readPairwiseAlignment([dict[x] for x in guild])
             
             #dictionary of pair of sequences, which will be aligned
             dict_aln = Dict(zip(guild,aln.aln_pair))
             
             #update the dictionary dict_records new aligned sequences
-            merge!(dict_records,dict_aln)
+            merge!(dict,dict_aln)
             #println(dict_records)
         
         #when the guild is multi sequences alignment (for example guild = ["AB","C"]) 
@@ -68,8 +67,8 @@ function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record}
             g2 = [string(y) for y in guild[2]]
 
             #two lists of Records: parameter for msa_globalAlignment methode
-            aln_seqs1 = [dict_records[x] for x in g1]
-            aln_seqs2 = [dict_records[y] for y in g2]
+            aln_seqs1 = [dict[x] for x in g1]
+            aln_seqs2 = [dict[y] for y in g2]
             
             #Multi Sequences Alignment: align more than 2 sequences 
             aln = msa_globalAlignment(aln_seqs1,aln_seqs2)
@@ -79,46 +78,11 @@ function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record}
             dict_aln2 = Dict(zip(g2,aln.aln_seqs2))
 
             #update the dictionary dict_records new aligned sequences
-            merge!(dict_records,dict_aln1)
+            merge!(dict,dict_aln1)
             #println(dict_records)
-            merge!(dict_records,dict_aln2)
+            merge!(dict,dict_aln2)
             #println(dict_records)
         end
     end
-    dict_records
+    dict
 end
-
-#Example
-s1 = Record("Seq1","TCAGGATGAAC")
-s2 = Record("Seq2","ATCACGATGAACC")
-s3 = Record("Seq3","ATCAGGAATGAATCC")
-s4 = Record("Seq4","TCACGATTGAATCGC")
-s5 = Record("Seq5","TCAGGAATGAATCGC")
-records = [s1,s2,s3,s4,s5] #return from DataReader
-
-dictrecords = createDictionary(records).dict_records
-
-guildTree = [["B","E"],["A","D"],["C","AD"],["CAD","BE"]]
-guildTree2 = [["B","E"],["A","BE"],["C","D"],["CD","ABE"]]
-
-progressiveAlignment(simple,dictrecords)
-
-#=  Result of progressiveAlignment(guildTree,dictrecords)
-Alignment Score: 248
-Dict{String, Record} with 5 entries:
-  "B" => Record("Seq2", "ATCACGA-TGAA-C-C")
-  "A" => Record("Seq1", "-TCAGGAT-GAA---C")
-  "C" => Record("Seq3", "ATCAGGAATGAATC-C")
-  "D" => Record("Seq4", "-TCACGATTGAATCGC")
-  "E" => Record("Seq5", "-TCAGGAATGAATCGC")
-=#
-
-#=  Result of progressiveAlignment(guildTree2,dictrecords)
-Alignment Score: 266
-Dict{String, Record} with 5 entries:
-  "B" => Record("Seq2", "ATCACGA-TGAA-C-C")
-  "A" => Record("Seq1", "-TCAGGA-TGAA---C")
-  "C" => Record("Seq3", "ATCAGGAATGAATC-C")
-  "D" => Record("Seq4", "-TCACGATTGAATCGC")
-  "E" => Record("Seq5", "-TCAGGAATGAATCGC")
-=#
