@@ -100,7 +100,7 @@ FastaIO [Link](https://docs.juliahub.com/FastaIO/i12XQ/1.0.0/)
 
 MCPhyloTree [GitHub](https://github.com/erathorn/MCPhyloTree.jl.git)
 
-ProgressiveAligner [GitHub] (https://github.com/latticetower/ProgressiveAligner.jl.git)
+ProgressiveAligner [GitHub](https://github.com/latticetower/ProgressiveAligner.jl.git)
 
 ## Language
 
