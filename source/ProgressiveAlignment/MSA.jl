@@ -14,7 +14,7 @@ gap_extend = -1
               gap_open penalty and gap_extend penalty
     return pair score
 =#
-function getPairScore(n1::String,n2::String,gap_open=-16,gap_extend=-1)
+function getPairScore(n1::String,n2::String,gap_open,gap_extend)
     @assert length(n1) == length(n2) == 2
     c1 = n1[2]; c2 = n2[2]
     if '-' in [c1,c2]
@@ -33,14 +33,14 @@ end
             seqs2 is a list of second sequence(s)
             pos1, pos2 are positions on seqs1 and seqs2 for SoP calculation
 =#
-function getSoP_at_a_pos(seqs1::Vector{String},seqs2::Vector{String},pos1::Int64, pos2::Int64)
+function getSoP_at_a_pos(seqs1::Vector{String},seqs2::Vector{String},pos1::Int64, pos2::Int64, gap_open, gap_extend)
     chars1 = pos1 > 1 ? [x[pos1-1:pos1] for x in seqs1] : ['A' * x[pos1] for x in seqs1]
     chars2 = pos2 > 1 ? [y[pos2-1:pos2] for y in seqs2] : ['A' * y[pos2] for y in seqs2]
     #println(chars1,"\n",chars2)
     local score = 0
     for x in chars1
         for y in chars2
-            score += getPairScore(x,y)
+            score += getPairScore(x,y,gap_open,gap_extend)
         end
     end
     return score
@@ -54,8 +54,8 @@ function setTraceback(dia::Int64,ver::Int64,hor::Int64)
     m = maximum([dia, ver, hor])
     if m == dia; return "dia"
     elseif m == ver; return "ver"
-    else return "hor"
     end
+    return "hor"
 end
 
 #-----------------------------------------------------------------------
@@ -113,7 +113,7 @@ end
     parameter two lists of Records. These lists contain groups of sequences, which are read from Guild Tree for Progressive Alignment
     return Traceback Matrix
 =#
-function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -16)
+function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}, gap_open = -16, gap_extend = -1)
     #check, if 2 lists of Records has minimal 1 Records
     @assert (length(aln_seqs1) >= 1 && length(aln_seqs2) >= 2) ||
             (length(aln_seqs2) >= 1 && length(aln_seqs1) >= 2)
@@ -143,19 +143,19 @@ function msa_globalAlignment(aln_seqs1::Vector{Record},aln_seqs2::Vector{Record}
     #Initial
     scorematrix[1,1] = 0
     for i in 2:len2
-        scorematrix[i,1] = scorematrix[i-1,1] + getSoP_at_a_pos(seqs1,seqs2,1,i)
+        scorematrix[i,1] = scorematrix[i-1,1] + getSoP_at_a_pos(seqs1,seqs2,1,i, gap_open, gap_extend)
     end
     for j in 2:len1
-        scorematrix[1,j] = scorematrix[1,j-1] + getSoP_at_a_pos(seqs1,seqs2,j,1)
+        scorematrix[1,j] = scorematrix[1,j-1] + getSoP_at_a_pos(seqs1,seqs2,j,1, gap_open, gap_extend)
     end
     #println(scorematrix)
     
     #add values in Score Matrix
     for i in 2:len2
         for j in 2:len1
-            ver = scorematrix[i-1,j] + getSoP_at_a_pos(seqs1,[y[1:i-1] * '-' for y in seqs2],j,i) #add a gap in a copie of sequence, calculate SoP of opening gap.
-            hor = scorematrix[i,j-1] + getSoP_at_a_pos([x[1:j-1] * '-' for x in seqs1],seqs2,j,i) #use copie to not change the sequence before the finish the scorematrix
-            dia = scorematrix[i-1,j-1] + getSoP_at_a_pos(seqs1,seqs2,j,i)
+            ver = scorematrix[i-1,j] + getSoP_at_a_pos(seqs1,[y[1:i-1] * '-' for y in seqs2],j,i, gap_open, gap_extend) #add a gap in a copie of sequence, calculate SoP of opening gap.
+            hor = scorematrix[i,j-1] + getSoP_at_a_pos([x[1:j-1] * '-' for x in seqs1],seqs2,j,i, gap_open, gap_extend) #use copie to not change the sequence before the finish the scorematrix
+            dia = scorematrix[i-1,j-1] + getSoP_at_a_pos(seqs1,seqs2,j,i, gap_open, gap_extend)
 
             scorematrix[i,j] = max(dia,ver,hor)
             traceback[i,j] = setTraceback(dia,ver,hor)
