@@ -100,6 +100,8 @@ FastaIO [Link](https://docs.juliahub.com/FastaIO/i12XQ/1.0.0/)
 
 MCPhyloTree [GitHub](https://github.com/erathorn/MCPhyloTree.jl.git)
 
+ProgressiveAligner [GitHub](https://github.com/latticetower/ProgressiveAligner.jl.git)
+
 ## Language
 
 Julia Version 1.8.2 [Link](https://julialang.org/downloads/)
