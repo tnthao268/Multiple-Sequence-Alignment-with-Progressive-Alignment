@@ -1,6 +1,6 @@
 include(dirname(@__FILE__()) * "/../source/DataWriter.jl")
 include(dirname(@__FILE__()) * "/../source/DataReader.jl")
-
+using Test
 
 fasta_record  = Record("test string1", "ACGT")
 fasta_record2 = Record("test string2", "ACGT")
