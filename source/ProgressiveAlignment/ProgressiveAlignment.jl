@@ -38,7 +38,7 @@ end
     return result of progressive alignment
 =#
 
-function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record})
+function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record}, gap_open = -16, gap_extend = -1)
     dict = copy(dict_records)
     
     #check, if each pair has 2 indexes
@@ -51,7 +51,7 @@ function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record}
         #when the guild is pairwise alignment (for example guild = ["A","B"])
         if length(guild[1]) == length(guild[2]) == 1
             #pairwise alignment
-            aln = readPairwiseAlignment([dict[x] for x in guild])
+            aln = readPairwiseAlignment([dict[x] for x in guild], gap_open, gap_extend)
             
             #dictionary of pair of sequences, which will be aligned
             dict_aln = Dict(zip(guild,aln.aln_pair))
@@ -71,7 +71,7 @@ function progressiveAlignment(simpleguildtree, dict_records::Dict{String,Record}
             aln_seqs2 = [dict[y] for y in g2]
             
             #Multi Sequences Alignment: align more than 2 sequences 
-            aln = msa_globalAlignment(aln_seqs1,aln_seqs2)
+            aln = msa_globalAlignment(aln_seqs1,aln_seqs2, gap_open, gap_extend)
 
             #2 dictionaries of sequences, which have been already aligned
             dict_aln1 = Dict(zip(g1,aln.aln_seqs1))

@@ -25,7 +25,7 @@ end
 #=  aligns two sequences and save the aligned sequences
     returns a ReadAlignment, which contains the score of the alignment and 2 aligned sequences
 =#
-function readPairwiseAlignment(pair::Vector{Record})
+function readPairwiseAlignment(pair::Vector{Record}, gap_open = -16, gap_extend = -1)
     
     #check, if there are 2 sequences for pairwise alignment and if they are DNA seuqences
     @assert length(pair) == 2 "there are more or less than two sequences to do a pairwise alignment"
@@ -34,7 +34,7 @@ function readPairwiseAlignment(pair::Vector{Record})
     end
 
     #pairwise alignment
-    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open = -16, gap_extend = -1)
+    scoremodel = AffineGapScoreModel(EDNAFULL,gap_open, gap_extend)
     res = pairalign(GlobalAlignment(),pair[1].sequence,pair[2].sequence,scoremodel)
     aln = alignment(res)
 
