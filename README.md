@@ -27,7 +27,7 @@ fasta_record  = Record("test string1", "ACGT")
 
 ```
 
-Call ```readSequence``` method to read a fasta file (sequence.fasta): 
+Call ```readSequences``` method to read a fasta file (sequence.fasta): 
 
 
 ```julia
@@ -73,14 +73,22 @@ guildTree = guildTreeInstruction(tree)
 
 ```guildTree_instruction``` shows pairs, which will be aligned, in order. A pair can be made up of 2 sequences (pairwise alignment) or a combination of alignment and sequence (multiple sequence alignment).
 
-To run the Progressive Alignment use ```simpleGuildTree``` to simplify the ```guildTree_instruction```, then call ```progressiveAlignment```:
+There are two ways to run the Progressive Alignment.
+
+First way, use ```simpleGuildTree``` to simplify the ```guildTree_instruction```, then call ```progressiveAlignment```:
 
 ```julia
 simpleinstruction = simpleGuildTree(guildTree_instruction)
 result = progressiveAlignment(simpleinstruction, dict_records) 
 ```
+Second one, use ```nestedInstruction``` to create a nested instruction from guild tree. Which describes the order of alignment in a nested list. Then call ```progressiveAlignment2```:
 
-```result``` returns a dictionary of Records, which contains all aligned sequences.
+```julia
+nestedinstruction = nestedInstruction(guildTree_instruction)
+result = progressiveAlignment2(nestedinstruction, dict_records)
+```
+
+Both ```result```s return a dictionary of Records, which contains all aligned sequences.
 
 ### 5. DataWriter
 
