@@ -33,7 +33,7 @@ end
               dict_records is a dictionary with records as values and their pseudo names as keys
     return result of progressive alignment
 =#
-function progressiveAlignmentAPair(pair, dict_records::Dict{String,Record})
+function progressiveAlignmentAPair(pair, dict_records::Dict{String,Record}, gap_open, gap_extend)
 
     println(pair)
     #check, if each pair has 2 indexes
@@ -42,12 +42,12 @@ function progressiveAlignmentAPair(pair, dict_records::Dict{String,Record})
     #when the guild is pairwise alignment (for example guild = ["A","B"])
     if length(pair[1]) == length(pair[2]) == 1
         #pairwise alignment
-        aln = readPairwiseAlignment([dict_records[x] for x in pair])
+        aln = readPairwiseAlignment([dict_records[x] for x in pair], gap_open, gap_extend)
         
         #dictionary of pair of sequences, which will be aligned
         dict_aln = Dict(zip(pair,aln.aln_pair))
         
-        #update the dictionary dict_records new aligned sequences
+        #update the dictionary dict_records with new aligned sequences
         merge!(dict_records,dict_aln)
         #println(dict_records)
     
@@ -62,13 +62,13 @@ function progressiveAlignmentAPair(pair, dict_records::Dict{String,Record})
         aln_seqs2 = [dict_records[y] for y in g2]
         
         #Multi Sequences Alignment: align more than 2 sequences 
-        aln = msa_globalAlignment(aln_seqs1,aln_seqs2)
+        aln = msa_globalAlignment(aln_seqs1,aln_seqs2, gap_open, gap_extend)
 
         #2 dictionaries of sequences, which have been already aligned
         dict_aln1 = Dict(zip(g1,aln.aln_seqs1))
         dict_aln2 = Dict(zip(g2,aln.aln_seqs2))
 
-        #update the dictionary dict_records new aligned sequences
+        #update the dictionary dict_records with new aligned sequences
         merge!(dict_records,dict_aln1)
         #println(dict_records)
         merge!(dict_records,dict_aln2)
@@ -82,7 +82,7 @@ end
               dict_records is a dictionary with records as values and their pseudo names as keys
     return result of progressive alignment
 =#
-function progressiveAlignment2(nestedInstruction,dict_records::Dict{String,Record})
+function progressiveAlignment2(nestedInstruction,dict_records::Dict{String,Record}, gap_open = -16, gap_extend = -1)
     if typeof(nestedInstruction) == Vector{String}
         return dict_records #return dict_records
     end
@@ -90,7 +90,7 @@ function progressiveAlignment2(nestedInstruction,dict_records::Dict{String,Recor
     for x in nestedInstruction
         println(x)
         if length(x) > 1
-            progressiveAlignmentAPair([createGroup(y) for y in x],progressiveAlignment2(x,dict_records))
+            progressiveAlignmentAPair([createGroup(y) for y in x],progressiveAlignment2(x,dict_records), gap_open,gap_extend)
         end
     end
     dict_records
