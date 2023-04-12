@@ -2,7 +2,7 @@
 using Pkg
 Pkg.add("BioAlignments")
 using BioAlignments
-include("DataReader.jl")
+include("../DataReader.jl")
 
 #--------------
 #ReadAlignment
