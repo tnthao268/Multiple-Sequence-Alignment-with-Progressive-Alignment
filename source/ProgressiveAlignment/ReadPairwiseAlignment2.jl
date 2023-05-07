@@ -52,9 +52,6 @@ function check_Protein(seq::String)
     return true
 end
 
-aa = [Char(aa) for aa in alphabet(AminoAcid)]
-pop!(aa)
-aa
 #--------------------------------------------------------
 #=  aligns two sequences and save the aligned sequences
     returns a ReadAlignment, which contains the score of the alignment and 2 aligned sequences
