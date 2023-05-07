@@ -1,4 +1,4 @@
-include("../ReadPairwiseAlignment.jl")
+include("ReadPairwiseAlignment.jl")
 include("MSA.jl")
 
 #----------------------------------
